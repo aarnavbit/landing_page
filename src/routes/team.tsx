@@ -1,0 +1,127 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { motion } from "motion/react";
+
+import { Reveal, RevealWords } from "../components/site/Reveal";
+import { PhotoSlot } from "../components/site/PhotoSlot";
+import { FACULTY, LEADERSHIP, TEAMS } from "../data/aarna";
+
+export const Route = createFileRoute("/team")({
+  head: () => ({
+    meta: [
+      { title: "Team — AARNA Club, VBIT" },
+      {
+        name: "description",
+        content:
+          "The people behind AARNA: faculty coordinator, core leadership and our eight working teams.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "Team — AARNA Club" },
+      {
+        property: "og:description",
+        content: "Faculty coordinator, chair, vice chair, secretary and eight teams.",
+      },
+    ],
+  }),
+  component: Team,
+});
+
+function Team() {
+  return (
+    <div>
+      <section className="relative isolate overflow-hidden border-b border-border">
+        <div className="mx-auto max-w-6xl px-5 py-24">
+          <p className="text-xs uppercase tracking-[0.25em] text-primary">Team</p>
+          <h1 className="mt-4 max-w-3xl font-display text-4xl font-bold leading-tight md:text-6xl">
+            <RevealWords text="The people behind Aarna." />
+          </h1>
+        </div>
+      </section>
+
+      {/* HIERARCHY */}
+      <section className="mx-auto max-w-5xl px-5 py-20">
+        <Reveal>
+          <div className="mx-auto max-w-sm">
+            <PersonCard role={FACULTY.role} name={FACULTY.name} detail={FACULTY.detail} lead />
+          </div>
+        </Reveal>
+
+        <Connector />
+
+        <div className="grid gap-5 sm:grid-cols-3">
+          {LEADERSHIP.map((p, i) => (
+            <Reveal key={p.role} delay={i * 0.1}>
+              <PersonCard role={p.role} name={p.name} />
+            </Reveal>
+          ))}
+        </div>
+
+        <Connector />
+
+        {/* EIGHT TEAMS */}
+        <Reveal>
+          <h2 className="text-center font-display text-2xl font-semibold md:text-3xl">
+            Eight teams. One club.
+          </h2>
+        </Reveal>
+
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {TEAMS.map((t, i) => (
+            <Reveal key={t.name} delay={i * 0.06}>
+              <motion.div
+                whileHover={{ y: -6 }}
+                transition={{ type: "spring", stiffness: 260, damping: 22 }}
+                className="grain-noise h-full rounded-2xl surface-panel p-4"
+              >
+                <PhotoSlot label={t.name} ratio="aspect-[4/5]" />
+                <h3 className="mt-4 font-display text-lg font-semibold">{t.name}</h3>
+                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{t.blurb}</p>
+              </motion.div>
+            </Reveal>
+          ))}
+        </div>
+
+
+      </section>
+    </div>
+  );
+}
+
+function Connector() {
+  return (
+    <div aria-hidden="true" className="my-10 flex flex-col items-center gap-1">
+      <span className="h-10 w-px bg-[linear-gradient(to_bottom,transparent,var(--primary))]" />
+      <span className="h-2 w-2 animate-pulse-glow rounded-full bg-primary" />
+      <span className="h-10 w-px bg-[linear-gradient(to_bottom,var(--primary),transparent)]" />
+    </div>
+  );
+}
+
+function PersonCard({
+  role,
+  name,
+  detail,
+  lead = false,
+}: {
+  role: string;
+  name: string;
+  detail?: string;
+  lead?: boolean;
+}) {
+  return (
+    <motion.div
+      whileHover={{ y: -6 }}
+      transition={{ type: "spring", stiffness: 260, damping: 22 }}
+      className={`grain-noise h-full rounded-2xl surface-panel p-5 text-center ${
+        lead ? "glow-ring" : ""
+      }`}
+    >
+      <PhotoSlot label={role} ratio={lead ? "aspect-[4/3]" : "aspect-[4/5]"} />
+      <span className="mt-4 inline-block rounded-full bg-[image:var(--gradient-flow)] px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-primary-foreground">
+        {role}
+      </span>
+      <h3 className="mt-3 font-display text-xl font-semibold">{name}</h3>
+      {detail && <p className="mt-1 text-xs text-muted-foreground">{detail}</p>}
+    </motion.div>
+  );
+}

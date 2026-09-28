@@ -1,0 +1,6 @@
+- [x] Import and refine the supplied Aarna site with light/dark palette and logo animation.
+- [x] Add ANVAYA and E-SUMMIT to this tenure's agenda only; keep event listings unchanged.
+- [x] Build a three-column, phone-friendly gallery from the supplied Drive photos.
+- [x] Verify pages and interactions, then deliver a clean downloadable ZIP.
+- [x] Replace orbit animation with pixel-forming Aarna mark and apply supplied light/dark palette sitewide.
+- [x] Deliver the approved pro UI: SVG Aarna hero, Abandon title, amber system, agenda names, and animated gallery.
