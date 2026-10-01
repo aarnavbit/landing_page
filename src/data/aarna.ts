@@ -8,6 +8,7 @@ export type AarnaEvent = {
   summary: string;
   details: string[];
   outcomes: string[];
+  imageUrl?: string;
 };
 
 export const EVENTS: AarnaEvent[] = [
@@ -44,6 +45,7 @@ export const EVENTS: AarnaEvent[] = [
       "The full format is still being finalised, so treat everything here as loading.",
     ],
     outcomes: ["Announcement dropping soon."],
+    imageUrl: "/icons/ishanya26.svg",
   },
 ];
 

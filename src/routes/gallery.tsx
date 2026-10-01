@@ -65,7 +65,11 @@ function Gallery() {
               transition={{ duration: 0.55, delay: Math.min(rowIndex * 0.035, 0.18) }}
             >
               <Button variant="ghost" onClick={() => setSelected(photoIndex)} aria-label={`Open Skill Quest photo ${photoIndex + 1}`} className={`group relative h-auto w-full overflow-hidden rounded-sm p-0 shadow-none ${photoIndex % 7 === 0 || photoIndex % 7 === 4 ? "aspect-[3/4]" : "aspect-[4/5]"}`}>
-                <img src={photo.url} alt={`Skill Quest event photograph ${photoIndex + 1}`} loading={photoIndex < 6 ? "eager" : "lazy"} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <img src={photo.url} alt={`Skill Quest event photograph ${photoIndex + 1}`} loading={photoIndex < 6 ? "eager" : "lazy"} className="h-full w-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:opacity-60" />
+                <div className="absolute inset-0 pointer-events-none flex flex-col justify-end p-4 md:p-6 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+                  <span className="text-left font-display font-semibold text-primary/90 text-sm md:text-base">Skill Quest</span>
+                  <span className="text-left text-xs md:text-sm text-foreground">In frames</span>
+                </div>
               </Button>
             </motion.div>;
           })}

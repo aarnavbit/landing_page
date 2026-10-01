@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import {
   motion,
@@ -9,6 +9,7 @@ import {
 
 import { AarnaMark } from "./AarnaMark";
 import { AARNA_MOTION } from "./aarnaMotion";
+import { arnaTools } from "../../data/arnaTools";
 
 const PIXELS = [
   [11, 1], [10, 2], [11, 2], [12, 2], [9, 3], [10, 3], [11, 3], [12, 3], [13, 3],
@@ -20,6 +21,65 @@ const PIXELS = [
   [4, 13], [5, 13], [20, 13], [21, 13], [4, 14], [5, 14], [21, 14], [22, 14],
 ] as const;
 
+const ORBIT_VARIANTS = {
+  inner: { radius: 120, duration: 30, direction: 1 },
+  middle: { radius: 180, duration: 45, direction: -1 },
+  outer: { radius: 240, duration: 60, direction: 1 },
+};
+
+function OrbitRing({ layer, tools }: { layer: "inner" | "middle" | "outer"; tools: typeof arnaTools }) {
+  const config = ORBIT_VARIANTS[layer];
+  const count = tools.length;
+  
+  return (
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10">
+      <div 
+        className="absolute top-1/2 left-1/2 rounded-full border border-primary/5"
+        style={{ 
+          width: config.radius * 2, 
+          height: config.radius * 2,
+          transform: 'translate(-50%, -50%)'
+        }}
+      />
+      <motion.div
+        className="absolute top-1/2 left-1/2"
+        animate={{ rotate: 360 * config.direction }}
+        transition={{ duration: config.duration, ease: "linear", repeat: Infinity }}
+      >
+        {tools.map((tool, i) => {
+          const angle = (i / count) * Math.PI * 2;
+          const x = Math.cos(angle) * config.radius;
+          const y = Math.sin(angle) * config.radius;
+          
+          return (
+            <div
+              key={tool.id}
+              className="absolute pointer-events-auto"
+              style={{
+                top: y,
+                left: x,
+                transform: 'translate(-50%, -50%)'
+              }}
+            >
+              <motion.div
+                className="group relative flex h-[42px] w-[42px] md:h-12 md:w-12 items-center justify-center rounded-full bg-surface-2 border border-border/50 shadow-[0_0_15px_rgba(0,0,0,0.5)] backdrop-blur-sm transition-colors hover:border-primary hover:bg-surface"
+                animate={{ rotate: -360 * config.direction }}
+                transition={{ duration: config.duration, ease: "linear", repeat: Infinity }}
+                whileHover={{ scale: 1.15 }}
+              >
+                <img src={tool.iconUrl} alt={tool.name} className="h-5 w-5 md:h-6 md:w-6 opacity-70 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap bg-surface-2 border border-border px-2 py-1 rounded text-[10px] font-medium tracking-wide">
+                  <span className="block text-primary">{tool.name.toUpperCase()}</span>
+                </div>
+              </motion.div>
+            </div>
+          );
+        })}
+      </motion.div>
+    </div>
+  );
+}
+
 export function AarnaHeroVisual() {
   const stageRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
@@ -28,9 +88,26 @@ export function AarnaHeroVisual() {
   const x = useSpring(pointerX, AARNA_MOTION.spring);
   const y = useSpring(pointerY, AARNA_MOTION.spring);
 
+  // Sync hero animation with preloader exit
+  const [canStart, setCanStart] = useState(() => {
+    if (typeof window === "undefined") return true;
+    try {
+      return sessionStorage.getItem("aarna-preloader-seen") === "1";
+    } catch {
+      return true;
+    }
+  });
+
+  useEffect(() => {
+    if (canStart) return;
+    const handler = () => setCanStart(true);
+    window.addEventListener("aarna-preloader-exit", handler);
+    return () => window.removeEventListener("aarna-preloader-exit", handler);
+  }, [canStart]);
+
   useEffect(() => {
     const stage = stageRef.current;
-    if (!stage || reducedMotion) return;
+    if (!stage || reducedMotion || !canStart) return;
 
     const tiles = stage.querySelectorAll<HTMLElement>(".aarna-assembly-tile");
     const mark = stage.querySelector<HTMLElement>(".aarna-mark-wrap");
@@ -64,7 +141,7 @@ export function AarnaHeroVisual() {
     }, stage);
 
     return () => scope.revert();
-  }, [reducedMotion]);
+  }, [reducedMotion, canStart]);
 
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "touch" || reducedMotion) return;
@@ -80,13 +157,22 @@ export function AarnaHeroVisual() {
 
   return (
     <div
-      className="aarna-hero-visual"
+      className="aarna-hero-visual relative flex h-[500px] w-full items-center justify-center overflow-visible"
       onPointerMove={onPointerMove}
       onPointerLeave={resetPointer}
       aria-hidden="true"
     >
-      <motion.div ref={stageRef} style={{ x, y }} className="aarna-hero-stage">
-        <div className="aarna-pixel-grid">
+      <motion.div ref={stageRef} style={{ x, y }} className="aarna-hero-stage relative flex items-center justify-center">
+        {/* Orbit Rings */}
+        {!reducedMotion && (
+          <>
+            <OrbitRing layer="outer" tools={arnaTools.filter(t => t.orbitLayer === "outer")} />
+            <OrbitRing layer="middle" tools={arnaTools.filter(t => t.orbitLayer === "middle")} />
+            <OrbitRing layer="inner" tools={arnaTools.filter(t => t.orbitLayer === "inner")} />
+          </>
+        )}
+
+        <div className="aarna-pixel-grid absolute">
           {PIXELS.map(([column, row]) => (
             <span
               key={`${column}-${row}`}
@@ -95,7 +181,7 @@ export function AarnaHeroVisual() {
             />
           ))}
         </div>
-        <div className="aarna-mark-wrap">
+        <div className="aarna-mark-wrap relative z-20">
           <AarnaMark />
         </div>
       </motion.div>

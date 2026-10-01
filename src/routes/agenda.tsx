@@ -76,20 +76,20 @@ function Agenda() {
       </section>
 
       <section ref={ref} className="mx-auto max-w-3xl px-5 py-20">
-        <div className="relative pl-10">
-          <div className="absolute left-[11px] top-2 h-full w-px bg-border" />
+        <div className="relative pl-10 md:pl-16">
+          <div className="absolute left-[11px] md:left-[19px] top-2 h-full w-px bg-border" />
           <motion.div
             style={{ scaleY, originY: 0 }}
-            className="absolute left-[11px] top-2 h-full w-px bg-[image:var(--gradient-flow)]"
+            className="absolute left-[11px] md:left-[19px] top-2 h-full w-px bg-[image:var(--gradient-flow)]"
           />
 
           {AGENDA.map((a, i) => (
-            <Reveal key={a.title} delay={i * 0.05} className="relative pb-12 last:pb-0">
-              <span className="absolute -left-10 top-1.5 grid h-6 w-6 place-items-center rounded-full border border-border bg-surface">
-                <span className="h-2 w-2 rounded-full bg-primary" />
+            <Reveal key={a.title} delay={i * 0.05} className="relative pb-16 last:pb-0">
+              <span className="absolute -left-10 md:-left-16 top-1.5 grid h-6 w-6 md:h-8 md:w-8 place-items-center rounded-full border border-border bg-surface transition-colors hover:border-primary">
+                <span className="h-2 w-2 md:h-2.5 md:w-2.5 rounded-full bg-primary" />
               </span>
-              <h2 className="font-display text-xl font-semibold md:text-2xl">{a.title}</h2>
-              <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">{a.body}</p>
+              <h2 className="font-display text-xl font-semibold md:text-2xl transition-colors hover:text-primary">{a.title}</h2>
+              <p className="mt-3 text-sm md:text-base leading-relaxed text-muted-foreground">{a.body}</p>
             </Reveal>
           ))}
         </div>
