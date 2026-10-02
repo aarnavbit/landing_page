@@ -15,12 +15,7 @@ export function AarnaLightSweep() {
 
 export function AarnaMark({ className = "" }: AarnaMarkProps) {
   return (
-    <svg
-      viewBox="0 0 400 360"
-      className={`aarna-mark ${className}`}
-      role="img"
-      aria-label="Aarna"
-    >
+    <svg viewBox="0 0 400 360" className={`aarna-mark ${className}`} role="img" aria-label="Aarna">
       <defs>
         <radialGradient id="aarna-glow-gradient">
           <stop offset="0%" stopColor="var(--brand-accent)" stopOpacity="0.28" />
