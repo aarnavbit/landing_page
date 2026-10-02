@@ -96,7 +96,7 @@ function Landing() {
             <img
               src="/icons/aarna-preloader.svg"
               alt="AARNA"
-              className="h-20 w-auto sm:h-24 lg:h-28 object-contain dark:invert-0 invert"
+              className="h-20 w-auto sm:h-24 lg:h-28 object-contain"
               draggable={false}
             />
           </motion.div>
