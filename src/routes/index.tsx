@@ -87,9 +87,19 @@ function Landing() {
             VBIT · Student-led creative commerce
           </motion.div>
 
-          <h1 className="mt-7 max-w-4xl font-title text-6xl font-normal leading-none sm:text-7xl lg:text-8xl">
-            <RevealWords text="AARNA" />
-          </h1>
+          <motion.div
+            className="mt-7 max-w-md"
+            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <img
+              src="/icons/aarna-preloader.svg"
+              alt="AARNA"
+              className="h-20 w-auto sm:h-24 lg:h-28 object-contain dark:invert-0 invert"
+              draggable={false}
+            />
+          </motion.div>
           <p className="mt-3 max-w-lg font-display text-xl font-semibold text-primary md:text-2xl">Turning Passions into Profits.</p>
 
           <motion.p

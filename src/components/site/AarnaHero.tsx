@@ -7,7 +7,6 @@ import {
   useSpring,
 } from "motion/react";
 
-import { AarnaMark } from "./AarnaMark";
 import { AARNA_MOTION } from "./aarnaMotion";
 import { arnaTools } from "../../data/arnaTools";
 
@@ -110,8 +109,8 @@ export function AarnaHeroVisual() {
     if (!stage || reducedMotion || !canStart) return;
 
     const tiles = stage.querySelectorAll<HTMLElement>(".aarna-assembly-tile");
-    const mark = stage.querySelector<HTMLElement>(".aarna-mark-wrap");
-    if (!mark) return;
+    const logoWrap = stage.querySelector<HTMLElement>(".aarna-logo-wrap");
+    if (!logoWrap) return;
 
     const scope = gsap.context(() => {
       const timeline = gsap.timeline({ repeat: -1, repeatDelay: 0.8 });
@@ -130,14 +129,14 @@ export function AarnaHeroVisual() {
           },
         )
         .fromTo(
-          mark,
+          logoWrap,
           { opacity: 0, scale: 0.82 },
           { opacity: 1, scale: 1.035, duration: 0.5, ease: "back.out(2)" },
           "-=0.28",
         )
-        .to(mark, { scale: 1, duration: 0.35, ease: "power2.out" })
+        .to(logoWrap, { scale: 1, duration: 0.35, ease: "power2.out" })
         .to(tiles, { opacity: 0.12, duration: 0.45 }, `+=${AARNA_MOTION.hold}`)
-        .to(mark, { opacity: 0.22, scale: 0.94, duration: 0.55, ease: "power2.in" });
+        .to(logoWrap, { opacity: 0.22, scale: 0.94, duration: 0.55, ease: "power2.in" });
     }, stage);
 
     return () => scope.revert();
@@ -181,8 +180,14 @@ export function AarnaHeroVisual() {
             />
           ))}
         </div>
-        <div className="aarna-mark-wrap relative z-20">
-          <AarnaMark />
+        {/* Replace SVG A mark with aarna-logo.svg */}
+        <div className="aarna-logo-wrap relative z-20 flex items-center justify-center">
+          <img
+            src="/icons/aarna-logo.svg"
+            alt="Aarna"
+            className="h-40 w-40 md:h-56 md:w-56 lg:h-64 lg:w-64 object-contain drop-shadow-[0_0_30px_rgba(245,180,0,0.3)] animate-float-soft"
+            draggable={false}
+          />
         </div>
       </motion.div>
     </div>

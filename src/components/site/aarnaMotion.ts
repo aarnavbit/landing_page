@@ -45,9 +45,9 @@ const HERO = {
 /* ─── Preloader timeline ────────────────────────────────── */
 const PRELOADER = {
   /** Minimum ms the preloader stays visible (prevents flash on fast loads) */
-  minDuration: 1800,
+  minDuration: 3000,
   /** Maximum ms before auto-dismissing regardless of assets */
-  maxDuration: 4000,
+  maxDuration: 6000,
 
   /* Phase durations (seconds) */
   microIdentityDelay: 0.1,

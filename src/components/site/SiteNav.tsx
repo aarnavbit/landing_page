@@ -2,7 +2,6 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, useRef } from "react";
 import { Menu, X, Moon, Sun } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
-const mark = { url: "/aarna-transparent.png" };
 import { Button } from "../ui/button";
 
 const LINKS = [
@@ -57,16 +56,13 @@ export function SiteNav() {
       transition={{ duration: 0.35, ease: "easeInOut" }}
       className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl"
     >
-      <nav className="mx-auto flex h-17 max-w-6xl items-center justify-between gap-3 px-5">
-        <Link to="/" className="flex shrink-0 items-center gap-2" onClick={() => setOpen(false)}>
-          <img src={mark.url} alt="" className="h-10 w-10 object-contain" />
-          <span className="font-display text-lg font-semibold">AARNA</span>
-        </Link>
-        <div className="hidden items-center gap-2 lg:flex">
+      <nav className="mx-auto flex h-17 max-w-6xl items-center justify-center gap-3 px-5">
+        {/* Centered nav links */}
+        <div className="hidden items-center gap-1 lg:flex">
           {LINKS.map(l => {
             const isActive = l.to === "/" ? routerState.location.pathname === "/" : routerState.location.pathname.startsWith(l.to);
             return (
-              <Link key={l.to} to={l.to} className={`relative px-4 py-2 text-sm transition-colors ${isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"}`} >
+              <Link key={l.to} to={l.to} className={`nav-link group relative px-4 py-2 text-sm font-medium transition-colors ${isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"}`} >
                 {isActive && (
                   <motion.div
                     layoutId="nav-active"
@@ -75,14 +71,37 @@ export function SiteNav() {
                   />
                 )}
                 <span className="relative z-10">{l.label}</span>
+                {/* Hover underline animation */}
+                <motion.span
+                  className="absolute bottom-0 left-1/2 h-[2px] -translate-x-1/2 rounded-full bg-primary"
+                  initial={{ width: 0, opacity: 0 }}
+                  whileHover={{ width: "60%", opacity: 1 }}
+                  transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                />
               </Link>
             );
           })}
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label={dark ? "Switch to light mode" : "Switch to dark mode"} title={dark ? "Light mode" : "Dark mode"}>
-            {dark ? <Sun /> : <Moon />}
-          </Button>
+        {/* Theme toggle switch + mobile menu - positioned absolute right */}
+        <div className="absolute right-5 flex items-center gap-2">
+          {/* Theme switch */}
+          <button
+            onClick={toggleTheme}
+            aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+            title={dark ? "Light mode" : "Dark mode"}
+            className="relative flex h-8 w-16 items-center rounded-full border border-border bg-surface-2 p-1 transition-colors duration-300"
+          >
+            <motion.div
+              className="flex h-6 w-6 items-center justify-center rounded-full bg-primary shadow-md"
+              animate={{ x: dark ? 0 : 30 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            >
+              {dark ? <Moon className="h-3.5 w-3.5 text-primary-foreground" /> : <Sun className="h-3.5 w-3.5 text-primary-foreground" />}
+            </motion.div>
+            {/* Background icons */}
+            <Sun className="absolute right-2 h-3 w-3 text-muted-foreground/40" />
+            <Moon className="absolute left-2 h-3 w-3 text-muted-foreground/40" />
+          </button>
           <Button variant="outline" size="icon" onClick={() => setOpen(true)} aria-label="Open menu" className="lg:hidden">
             <Menu />
           </Button>
@@ -97,23 +116,17 @@ export function SiteNav() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-0 z-[60] flex flex-col bg-background px-5 py-6 lg:hidden"
+          className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-background px-5 py-6 lg:hidden"
         >
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-              <img src={mark.url} alt="" className="h-10 w-10 object-contain" />
-              <span className="font-display text-lg font-semibold">AARNA</span>
-            </Link>
-            <Button variant="ghost" size="icon" onClick={() => setOpen(false)} aria-label="Close menu">
-              <X className="h-6 w-6" />
-            </Button>
-          </div>
-          <div className="mt-12 flex flex-col gap-6 px-4">
+          <Button variant="ghost" size="icon" onClick={() => setOpen(false)} aria-label="Close menu" className="absolute right-5 top-5">
+            <X className="h-6 w-6" />
+          </Button>
+          <div className="flex flex-col items-center gap-6">
             {LINKS.map((l, i) => (
               <motion.div
                 key={l.to}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 + 0.1 }}
               >
                 <Link
