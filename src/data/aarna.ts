@@ -98,3 +98,142 @@ export const OBJECTIVES = [
     body: "Help students build portfolios impressive enough to open new doors.",
   },
 ];
+
+export type SkillArea = {
+  id: string;
+  name: string;
+  tagline: string;
+  description: string;
+  outcomes: string[];
+  icon: string;
+};
+
+export const SKILLS: SkillArea[] = [
+  {
+    id: "designing",
+    name: "Designing",
+    tagline: "Visual identity & UI craft",
+    description:
+      "Graphic design, brand systems, layout engineering, poster creation, and UI/UX interfaces.",
+    outcomes: ["Brand identity kits", "Client social assets", "UI mockups & design systems"],
+    icon: "Palette",
+  },
+  {
+    id: "video-editing",
+    name: "Video Editing",
+    tagline: "Motion & narrative production",
+    description:
+      "Timeline editing, color grading, sound design, event highlights, and social video reels.",
+    outcomes: ["Commercial reels", "Event aftermath films", "Short-form video assets"],
+    icon: "Video",
+  },
+  {
+    id: "photography",
+    name: "Photography",
+    tagline: "Event, product & headshot capture",
+    description: "Composition, lighting control, portraiture, event coverage, and photo retouches.",
+    outcomes: ["Event galleries", "Product catalogs", "Professional headshots"],
+    icon: "Camera",
+  },
+  {
+    id: "marketing",
+    name: "Marketing",
+    tagline: "Campaigns & growth strategies",
+    description:
+      "Audience targeting, digital campaigns, event promotion, copy strategy, and analytics.",
+    outcomes: ["Campaign roadmaps", "Audience growth", "Conversion copy"],
+    icon: "Megaphone",
+  },
+  {
+    id: "content",
+    name: "Content",
+    tagline: "Storytelling & copywriting",
+    description:
+      "Scriptwriting, article creation, newsletter publishing, and brand voice guidelines.",
+    outcomes: ["Brand stories", "Content calendars", "Conversion copy"],
+    icon: "PenTool",
+  },
+  {
+    id: "coding",
+    name: "Coding",
+    tagline: "Web apps & technical solutions",
+    description: "Full-stack web apps, frontend user interfaces, backend APIs, and digital tools.",
+    outcomes: ["Production web apps", "Client sites", "Tooling automation"],
+    icon: "Code",
+  },
+  {
+    id: "branding",
+    name: "Branding",
+    tagline: "Strategy & market positioning",
+    description: "Value propositions, visual guidelines, pitch decks, and commercial positioning.",
+    outcomes: ["Brand pitch decks", "Strategy guides", "Market positioning"],
+    icon: "Briefcase",
+  },
+  {
+    id: "freelancing",
+    name: "Freelancing",
+    tagline: "Client management & pricing",
+    description:
+      "Proposal drafting, client negotiations, contract structures, pricing clinics, and invoicing.",
+    outcomes: ["Client contracts", "Pricing models", "Sustainable retainer income"],
+    icon: "TrendingUp",
+  },
+];
+
+export const OFFERINGS = [
+  {
+    title: "Discover Skills",
+    description: "Uncover your hidden strengths across design, tech, media, and marketing.",
+    icon: "Compass",
+  },
+  {
+    title: "Improve Craft",
+    description: "Sharpen your execution through practical feedback, teardowns, and masterclasses.",
+    icon: "Zap",
+  },
+  {
+    title: "Real Projects",
+    description: "Work on live briefs from actual brands and businesses with club backing.",
+    icon: "Briefcase",
+  },
+  {
+    title: "Client Connections",
+    description: "Network directly with real-world clients, agencies, and industry leaders.",
+    icon: "Users",
+  },
+  {
+    title: "Portfolio Building",
+    description: "Turn every event, brief, and project into proof of work that opens career doors.",
+    icon: "FolderCheck",
+  },
+  {
+    title: "Freelancing System",
+    description: "Master pricing, proposal writing, contract management, and negotiation.",
+    icon: "DollarSign",
+  },
+  {
+    title: "Income Opportunities",
+    description: "Convert your craft into recurring revenue while still completing your degree.",
+    icon: "Coins",
+  },
+];
+
+export const WHO_CAN_JOIN = [
+  {
+    title: "Creators & Designers",
+    description:
+      "Graphic artists, UI designers, video editors, photographers, and motion animators.",
+  },
+  {
+    title: "Developers & Techies",
+    description: "Web developers, coders, automation enthusiasts, and technical problem solvers.",
+  },
+  {
+    title: "Marketers & Writers",
+    description: "Storytellers, copywriters, social media managers, and brand strategists.",
+  },
+  {
+    title: "Aspiring Freelancers",
+    description: "Any student eager to turn their skills into income and build a portfolio.",
+  },
+];

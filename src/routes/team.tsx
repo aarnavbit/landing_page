@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
+import { Sparkles, Users, Award, ShieldCheck } from "lucide-react";
 
 import { Reveal, RevealWords } from "../components/site/Reveal";
 import { PhotoSlot } from "../components/site/PhotoSlot";
@@ -26,21 +27,39 @@ export const Route = createFileRoute("/team")({
   component: Team,
 });
 
-function Team() {
+export function Team() {
   return (
-    <div>
-      <section className="relative isolate overflow-hidden border-b border-border">
-        <div className="mx-auto max-w-6xl px-5 py-24">
-          <p className="text-xs uppercase tracking-[0.25em] text-primary">Team</p>
-          <h1 className="mt-4 max-w-3xl font-display text-4xl font-bold leading-tight md:text-6xl">
-            <RevealWords text="The people behind Aarna." />
+    <div className="relative overflow-x-hidden">
+      {/* PAGE HERO */}
+      <section className="relative isolate overflow-hidden border-b border-border bg-surface/30">
+        <div className="mx-auto max-w-6xl px-5 py-20 sm:py-24">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary"
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            AARNA Organization Structure
+          </motion.div>
+          <h1 className="mt-4 max-w-3xl font-display text-4xl font-bold leading-tight md:text-6xl tracking-tight">
+            <RevealWords text="The people behind AARNA." />
           </h1>
+          <p className="mt-4 max-w-lg text-muted-foreground text-base">
+            From our dedicated faculty mentor to student core leadership and eight operational
+            domain teams.
+          </p>
         </div>
       </section>
 
-      {/* HIERARCHY */}
+      {/* HIERARCHY SECTION */}
       <section className="mx-auto max-w-5xl px-5 py-20">
+        {/* LEVEL 1: FACULTY COORDINATOR */}
         <Reveal>
+          <div className="text-center mb-4">
+            <span className="text-xs uppercase tracking-widest text-primary font-semibold">
+              Faculty Leadership
+            </span>
+          </div>
           <div className="mx-auto max-w-sm">
             <PersonCard role={FACULTY.role} name={FACULTY.name} detail={FACULTY.detail} lead />
           </div>
@@ -48,40 +67,60 @@ function Team() {
 
         <Connector />
 
-        <div className="grid gap-5 sm:grid-cols-3">
-          {LEADERSHIP.map((p, i) => (
-            <Reveal key={p.role} delay={i * 0.1}>
-              <PersonCard role={p.role} name={p.name} />
-            </Reveal>
-          ))}
-        </div>
+        {/* LEVEL 2: CORE LEADERSHIP */}
+        <Reveal>
+          <div className="text-center mb-8">
+            <span className="text-xs uppercase tracking-widest text-primary font-semibold">
+              Core Executive Leadership
+            </span>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-3">
+            {LEADERSHIP.map((p, i) => (
+              <Reveal key={p.role} delay={i * 0.1}>
+                <PersonCard role={p.role} name={p.name} />
+              </Reveal>
+            ))}
+          </div>
+        </Reveal>
 
         <Connector />
 
-        {/* EIGHT TEAMS */}
+        {/* LEVEL 3: EIGHT WORKING TEAMS */}
         <Reveal>
-          <h2 className="text-center font-display text-2xl font-semibold md:text-3xl">
-            Eight teams. One club.
-          </h2>
+          <div className="text-center">
+            <span className="text-xs uppercase tracking-widest text-primary font-semibold">
+              Operational Divisions
+            </span>
+            <h2 className="mt-2 font-display text-2xl font-bold md:text-4xl">
+              Eight teams. One club.
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">
+              Our working divisions driving design, documentation, branding, outreach, tech, and
+              event execution.
+            </p>
+          </div>
         </Reveal>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {TEAMS.map((t, i) => (
             <Reveal key={t.name} delay={i * 0.06}>
               <motion.div
                 whileHover={{ y: -6 }}
                 transition={{ type: "spring", stiffness: 260, damping: 22 }}
-                className="grain-noise h-full rounded-2xl surface-panel p-4"
+                className="grain-noise h-full rounded-2xl surface-panel p-5 border border-border flex flex-col justify-between"
               >
-                <PhotoSlot label={t.name} ratio="aspect-[4/5]" />
-                <h3 className="mt-4 font-display text-lg font-semibold">{t.name}</h3>
-                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{t.blurb}</p>
+                <div>
+                  <PhotoSlot label={t.name} ratio="aspect-[4/3]" />
+                  <div className="mt-4 flex items-center justify-between">
+                    <h3 className="font-display text-lg font-bold">{t.name}</h3>
+                    <span className="h-2 w-2 rounded-full bg-primary" />
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{t.blurb}</p>
+                </div>
               </motion.div>
             </Reveal>
           ))}
         </div>
-
-
       </section>
     </div>
   );
@@ -90,9 +129,9 @@ function Team() {
 function Connector() {
   return (
     <div aria-hidden="true" className="my-10 flex flex-col items-center gap-1">
-      <span className="h-10 w-px bg-[linear-gradient(to_bottom,transparent,var(--primary))]" />
-      <span className="h-2 w-2 animate-pulse-glow rounded-full bg-primary" />
-      <span className="h-10 w-px bg-[linear-gradient(to_bottom,var(--primary),transparent)]" />
+      <span className="h-10 w-px bg-gradient-to-b from-transparent to-primary" />
+      <span className="h-2.5 w-2.5 rounded-full bg-primary shadow-sm" />
+      <span className="h-10 w-px bg-gradient-to-b from-primary to-transparent" />
     </div>
   );
 }
@@ -112,16 +151,19 @@ function PersonCard({
     <motion.div
       whileHover={{ y: -6 }}
       transition={{ type: "spring", stiffness: 260, damping: 22 }}
-      className={`grain-noise h-full rounded-2xl surface-panel p-5 text-center ${
-        lead ? "glow-ring" : ""
+      className={`grain-noise h-full rounded-3xl surface-panel p-6 text-center border border-border ${
+        lead ? "ring-2 ring-primary/60 shadow-lg" : ""
       }`}
     >
       <PhotoSlot label={role} ratio={lead ? "aspect-[4/3]" : "aspect-[4/5]"} />
-      <span className="mt-4 inline-block rounded-full bg-[image:var(--gradient-flow)] px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-primary-foreground">
+
+      <span className="mt-5 inline-block rounded-full bg-primary px-3.5 py-1 text-[10px] font-bold uppercase tracking-widest text-primary-foreground shadow-xs">
         {role}
       </span>
-      <h3 className="mt-3 font-display text-xl font-semibold">{name}</h3>
-      {detail && <p className="mt-1 text-xs text-muted-foreground">{detail}</p>}
+
+      <h3 className="mt-3 font-display text-xl font-bold">{name}</h3>
+
+      {detail && <p className="mt-1 text-xs text-muted-foreground font-medium">{detail}</p>}
     </motion.div>
   );
 }
