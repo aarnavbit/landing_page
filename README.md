@@ -51,3 +51,4 @@ npm run format
 - **Events:** Edit `src/data/aarna.ts` (or equivalent data file) to add new events.
 - **Gallery Images:** Place new images in `public/` (e.g., `public/gallery/`) and add references in the data files or gallery components.
 - **Brand Assets:** The official brand assets are `public/icons/arna-logo-white.svg` and `public/icons/arna-mark.svg`. Update these files if the brand changes.
+hello 
