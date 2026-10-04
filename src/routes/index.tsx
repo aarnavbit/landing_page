@@ -51,40 +51,23 @@ function Landing() {
 
   useEffect(() => {
     if (!containerRef.current || !textRef.current || !visualRef.current) return;
+    
+    // Check if preloader is active. If so, don't break animations right away.
+    // (GSAP ScrollTrigger can be set up immediately but we wait for it to be visible).
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=50%",
-          scrub: 0.8,
+          end: "+=150%",
+          scrub: 1,
+          pin: true,
         },
       });
 
-      // 1. Hero text smoothly fades out and moves up
-      tl.to(
-        textRef.current,
-        {
-          opacity: 0,
-          y: -40,
-          duration: 0.6,
-          ease: "power2.out",
-        },
-        0
-      );
-
-      // 2. Scroll indicator fades out immediately as scroll begins
-      tl.to(
-        ".aarna-scroll-indicator",
-        {
-          opacity: 0,
-          y: 18,
-          duration: 0.25,
-          ease: "power2.out",
-        },
-        0
-      );
+      tl.to(textRef.current, { opacity: 0, y: -50, duration: 1 }, 0)
+        .to(visualRef.current, { scale: 50, opacity: 0, duration: 2, ease: "power2.in" }, 0.5);
     }, containerRef);
 
     return () => ctx.revert();
@@ -152,7 +135,7 @@ function Landing() {
             </Link>
           </motion.div>
           </div>
-          <div ref={visualRef} className="relative min-h-[22rem] lg:min-h-[36rem] flex items-center justify-center w-full">
+          <div ref={visualRef} className="relative min-h-[20rem] lg:min-h-[36rem]">
             <AarnaHeroVisual />
           </div>
         </div>
