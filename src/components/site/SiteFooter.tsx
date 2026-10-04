@@ -1,6 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Linkedin, Mail, ArrowUp } from "lucide-react";
-import { Button } from "../ui/button";
 import { Instagram, Linkedin, Github, Mail, ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
 

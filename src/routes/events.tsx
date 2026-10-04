@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { CalendarDays, MapPin, X, Sparkles, CheckCircle2, ArrowRight } from "lucide-react";
-import { CalendarDays, MapPin, X, ArrowUpRight } from "lucide-react";
+import { CalendarDays, MapPin, X, Sparkles, CheckCircle2, ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { Reveal, RevealWords } from "../components/site/Reveal";
 import { PhotoSlot } from "../components/site/PhotoSlot";

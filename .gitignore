@@ -1,3 +1,7 @@
+# Bun
+bun.lock
+bunfig.toml
+
 # Logs
 logs
 *.log

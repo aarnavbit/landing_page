@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUpRight,
   Palette,
@@ -21,19 +23,38 @@ import {
   Sparkles,
   CalendarDays,
   MapPin,
+  ChevronDown,
 } from "lucide-react";
 
 import { AarnaHeroVisual } from "../components/site/AarnaHero";
 import { Reveal, RevealWords } from "../components/site/Reveal";
 import { EVENTS, OBJECTIVES, SKILLS, OFFERINGS } from "../data/aarna";
 import { JoinModal } from "../components/site/JoinModal";
-import { ArrowUpRight, ChevronDown } from "lucide-react";
-
-import { AarnaHeroVisual } from "../components/site/AarnaHero";
-import { Reveal, RevealWords } from "../components/site/Reveal";
 import { TiltCard } from "../components/site/TiltCard";
 import { IshanyaPopup } from "../components/site/IshanyaPopup";
-import { EVENTS, OBJECTIVES } from "../data/aarna";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const SKILL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  Palette,
+  Video,
+  Camera,
+  Megaphone,
+  PenTool,
+  Code,
+  Briefcase,
+  TrendingUp,
+};
+
+const OFFERING_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  Compass,
+  Zap,
+  Briefcase,
+  Users,
+  FolderCheck,
+  DollarSign,
+  Coins,
+};
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -67,15 +88,14 @@ const MARQUEE = [
   "Branding",
 ];
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-gsap.registerPlugin(ScrollTrigger);
-
 function Landing() {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const visualRef = useRef<HTMLDivElement>(null);
+  const [activeSkillId, setActiveSkillId] = useState(SKILLS[0]?.id || "designing");
+  const [isJoinOpen, setIsJoinOpen] = useState(false);
+
+  const selectedSkill = SKILLS.find((s) => s.id === activeSkillId) || SKILLS[0];
 
   useEffect(() => {
     if (!containerRef.current || !textRef.current || !visualRef.current) return;
@@ -170,49 +190,17 @@ function Landing() {
               to="/about"
               className="group inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform duration-200 hover:-translate-y-0.5"
             >
-              <Sparkles className="h-3.5 w-3.5" />
-              VBIT · Student-led creative commerce
-            </motion.div>
-
-            <h1 className="mt-6 max-w-4xl font-title text-6xl font-normal leading-none sm:text-7xl lg:text-8xl tracking-tight">
-              <RevealWords text="AARNA" />
-            </h1>
-            <p className="mt-3 max-w-lg font-display text-xl font-bold text-primary md:text-2xl">
-              Turning Passions into Profits.
-            </p>
-
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg"
+              What is Aarna
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
+            <Link
+              to="/events"
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-6 py-3 text-sm font-semibold transition-colors hover:bg-surface-2"
             >
-              Earning is a mindset. Aarna is the platform at Vignana Bharathi Institute of
-              Technology where ambitious students turn the skills they already have into an income
-              stream — while pursuing their studies.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.55 }}
-              className="mt-8 flex flex-wrap gap-3"
-            >
-              <Link
-                to="/about"
-                className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-sm transition-transform duration-200 hover:-translate-y-0.5 hover:bg-primary/90"
-              >
-                Explore AARNA
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
-              <Link
-                to="/events"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-6 py-3.5 text-sm font-semibold transition-colors hover:bg-surface-2 hover:border-primary/50"
-              >
-                View Events
-              </Link>
-            </motion.div>
-          </div>
+              See our events
+            </Link>
+          </motion.div>
+        </div>
           <div ref={visualRef} className="relative min-h-[22rem] lg:min-h-[36rem] flex items-center justify-center w-full">
             <AarnaHeroVisual />
           </div>

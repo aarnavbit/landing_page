@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { X, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
-import { X, Camera } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Sparkles, Camera } from "lucide-react";
 import { Button } from "../components/ui/button";
 
 const ALL_PHOTOS = Array.from({ length: 26 }, (_, i) => {
