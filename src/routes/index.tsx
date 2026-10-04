@@ -5,6 +5,7 @@ import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { AarnaHeroVisual } from "../components/site/AarnaHero";
 import { Reveal, RevealWords } from "../components/site/Reveal";
 import { TiltCard } from "../components/site/TiltCard";
+import { IshanyaPopup } from "../components/site/IshanyaPopup";
 import { EVENTS, OBJECTIVES } from "../data/aarna";
 
 export const Route = createFileRoute("/")({
@@ -92,6 +93,7 @@ function Landing() {
 
   return (
     <div className="relative">
+      <IshanyaPopup />
       <section ref={containerRef} className="relative isolate overflow-hidden border-b border-border bg-background">
         <div className="mx-auto grid min-h-[calc(100svh-4rem)] max-w-7xl items-center px-5 py-10 sm:py-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(28rem,1.1fr)] lg:gap-8">
           <div ref={textRef} className="relative z-10 pt-4 lg:pt-0">

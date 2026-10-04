@@ -16,10 +16,16 @@ export function PhotoSlot({
 }) {
   return (
     <div
-      className={`${ratio} w-full overflow-hidden rounded-xl border border-dashed border-border bg-surface`}
+      className={`${ratio} w-full overflow-hidden rounded-xl ${
+        imageUrl ? "border border-border/60" : "border border-dashed border-border"
+      } bg-surface`}
     >
       {imageUrl ? (
-        <img src={imageUrl} alt={label ?? "Photo"} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        <img
+          src={imageUrl}
+          alt={label ?? "Photo"}
+          className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+        />
       ) : label?.includes("Skill Quest") ? (
         <img src={skillQuestPhoto.url} alt="Skill Quest participants on stage" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
       ) : (

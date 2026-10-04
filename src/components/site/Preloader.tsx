@@ -12,7 +12,7 @@ const EASE_OUT = AARNA_MOTION.ease.out;
 /* ─── Session guard — show preloader only on first visit ── */
 const STORAGE_KEY = "aarna-preloader-seen";
 
-function hasSeenPreloader(): boolean {
+export function hasSeenPreloader(): boolean {
   if (typeof window === "undefined") return false;
   
   try {
@@ -74,6 +74,10 @@ export function Preloader({
     if (hasSeenPreloader()) {
       setShouldShow(false);
       setPhase("done");
+      if (typeof window !== "undefined") {
+        (window as any).__aarnaPreloaderDone = true;
+        window.dispatchEvent(new CustomEvent("aarna:preloader-done"));
+      }
     }
   }, []);
 
@@ -158,6 +162,10 @@ export function Preloader({
       setPhase("done");
       unlockScroll();
       markPreloaderSeen();
+      if (typeof window !== "undefined") {
+        (window as any).__aarnaPreloaderDone = true;
+        window.dispatchEvent(new CustomEvent("aarna:preloader-done"));
+      }
       onComplete?.();
     }, duration);
     return () => clearTimeout(id);
