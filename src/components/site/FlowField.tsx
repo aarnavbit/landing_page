@@ -38,7 +38,7 @@ const SHAPE = [
 ];
 
 const TILES = SHAPE.flatMap((row, y) =>
-  [...row].flatMap((cell, x) => cell === "1" ? [{ x, y }] : []),
+  [...row].flatMap((cell, x) => (cell === "1" ? [{ x, y }] : [])),
 );
 
 export function FlowField() {
@@ -53,11 +53,45 @@ export function FlowField() {
       if (!logo) return;
       const timeline = gsap.timeline({ repeat: -1, repeatDelay: 0.55 });
       timeline
-        .fromTo(tiles, { opacity: 0, scale: 0.1, rotation: -90, x: (_, el) => (Number((el as HTMLElement).dataset['x']) - 18) * 2, y: -22 },
-          { opacity: 0.92, scale: 1, rotation: 0, x: 0, y: 0, duration: 0.65, stagger: { each: 0.012, from: "center", grid: "auto" }, ease: "back.out(1.8)" })
-        .fromTo(logo, { opacity: 0.12, scale: 0.78 }, { opacity: 0.68, scale: 1.04, duration: 0.45, ease: "back.out(2)" }, "-=0.3")
+        .fromTo(
+          tiles,
+          {
+            opacity: 0,
+            scale: 0.1,
+            rotation: -90,
+            x: (_, el) => (Number((el as HTMLElement).dataset["x"]) - 18) * 2,
+            y: -22,
+          },
+          {
+            opacity: 0.92,
+            scale: 1,
+            rotation: 0,
+            x: 0,
+            y: 0,
+            duration: 0.65,
+            stagger: { each: 0.012, from: "center", grid: "auto" },
+            ease: "back.out(1.8)",
+          },
+        )
+        .fromTo(
+          logo,
+          { opacity: 0.12, scale: 0.78 },
+          { opacity: 0.68, scale: 1.04, duration: 0.45, ease: "back.out(2)" },
+          "-=0.3",
+        )
         .to(logo, { scale: 1, duration: 0.35, ease: "power2.out" })
-        .to(tiles, { opacity: 0, scale: 0.75, rotation: 90, duration: 0.4, stagger: { each: 0.004, from: "edges" }, ease: "power2.in" }, "+=1.3")
+        .to(
+          tiles,
+          {
+            opacity: 0,
+            scale: 0.75,
+            rotation: 90,
+            duration: 0.4,
+            stagger: { each: 0.004, from: "edges" },
+            ease: "power2.in",
+          },
+          "+=1.3",
+        )
         .to(logo, { opacity: 0.12, scale: 0.88, duration: 0.5 }, "-=0.2");
     }, stage);
     return () => scope.revert();
@@ -72,14 +106,22 @@ export function FlowField() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
       >
-        <img src={pixelMark} alt="" className="aarna-pixel-logo absolute inset-0 h-full w-full object-contain opacity-60" />
+        <img
+          src={pixelMark}
+          alt=""
+          className="aarna-pixel-logo absolute inset-0 h-full w-full object-contain opacity-60"
+        />
         <div className="absolute inset-0">
           {TILES.map(({ x, y }) => (
             <span
               key={`${x}-${y}`}
               data-x={x}
               className="aarna-tile absolute block aspect-square bg-accent/90"
-              style={{ left: `${x / 36 * 100}%`, top: `${y / 36 * 100}%`, width: `${100 / 36}%` }}
+              style={{
+                left: `${(x / 36) * 100}%`,
+                top: `${(y / 36) * 100}%`,
+                width: `${100 / 36}%`,
+              }}
             />
           ))}
         </div>

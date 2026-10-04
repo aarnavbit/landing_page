@@ -148,16 +148,48 @@ html *::after {
 .aarna-pixel-grid { position: absolute; inset: 12% 14% 8%; opacity: 0.9; }
 .aarna-assembly-tile { position: absolute; left: calc(var(--tile-x) * 4%); top: calc(var(--tile-y) * 5.5%); width: clamp(5px, 1.1vw, 9px); aspect-ratio: 1; background: var(--brand-accent); box-shadow: 0 0 8px color-mix(in srgb, var(--brand-accent) 30%, transparent); will-change: transform, opacity; }
 
-@keyframes lightTravel { to { stroke-dashoffset: -530; } }
-@keyframes aarna-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-@keyframes aarna-glow-breathe { 0%,100% { opacity: .62; transform: scale(.92); } 50% { opacity: .9; transform: scale(1.08); } }
+@keyframes lightTravel {
+  to {
+    stroke-dashoffset: -530;
+  }
+}
+@keyframes aarna-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes aarna-glow-breathe {
+  0%,
+  100% {
+    opacity: 0.62;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.08);
+  }
+}
 
 @media (max-width: 639px) {
-  .aarna-hero-visual { min-height: 20rem; }
-  .aarna-hero-stage { width: min(112%, 24rem); }
-  .aarna-glow { opacity: .48; }
-  .aarna-light { stroke-width: 5; }
-  .aarna-assembly-tile:nth-child(2n) { display: none; }
+  .aarna-hero-visual {
+    min-height: 20rem;
+  }
+  .aarna-hero-stage {
+    width: min(112%, 24rem);
+  }
+  .aarna-glow {
+    opacity: 0.48;
+  }
+  .aarna-light {
+    stroke-width: 5;
+  }
+  .aarna-assembly-tile:nth-child(2n) {
+    display: none;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   *,*::before,*::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }

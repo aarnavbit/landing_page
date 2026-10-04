@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { X, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { X, Camera } from "lucide-react";
 import { Button } from "../components/ui/button";
 
@@ -19,30 +20,45 @@ const COLUMNS = [
 ];
 
 export const Route = createFileRoute("/gallery")({
-  head: () => ({ meta: [
-    { title: "Gallery — AARNA Skill Quest" },
-    { name: "description", content: "Scenes from AARNA's Skill Quest: students, speakers, and creative work at VBIT." },
-    { property: "og:type", content: "website" },
-    { name: "twitter:card", content: "summary_large_image" },
-    { property: "og:title", content: "Gallery — AARNA Skill Quest" },
-    { property: "og:description", content: "Explore photographs from AARNA's Skill Quest event at VBIT." },
-  ] }),
+  head: () => ({
+    meta: [
+      { title: "Gallery — AARNA Club, VBIT" },
+      {
+        name: "description",
+        content: "Scenes from AARNA's Skill Quest: students, speakers, and creative work at VBIT.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "Gallery — AARNA Club" },
+      {
+        property: "og:description",
+        content: "Explore photographs from AARNA's Skill Quest event at VBIT.",
+      },
+    ],
+  }),
   component: Gallery,
 });
 
-function Gallery() {
+export function Gallery() {
   const [selected, setSelected] = useState<number | null>(null);
   const reducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
-  const firstY = useTransform(scrollYProgress, [0, 1], [0, reducedMotion ? 0 : -46]);
-  const secondY = useTransform(scrollYProgress, [0, 1], [0, reducedMotion ? 0 : 34]);
-  const thirdY = useTransform(scrollYProgress, [0, 1], [0, reducedMotion ? 0 : -28]);
+
+  const firstY = useTransform(scrollYProgress, [0, 1], [0, reducedMotion ? 0 : -36]);
+  const secondY = useTransform(scrollYProgress, [0, 1], [0, reducedMotion ? 0 : 28]);
+  const thirdY = useTransform(scrollYProgress, [0, 1], [0, reducedMotion ? 0 : -20]);
+
   const columnOffsets = [firstY, secondY, thirdY] as const;
 
   useEffect(() => {
     if (selected === null) return;
-    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setSelected(null); };
-    window.addEventListener("keydown", onKey);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelected(null);
+      if (event.key === "ArrowRight") handleNext();
+      if (event.key === "ArrowLeft") handlePrev();
+    };
+
+    window.addEventListener("keydown", onKeyDown);
     document.body.style.overflow = "hidden";
     return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
   }, [selected]);

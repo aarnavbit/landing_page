@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import { Instagram, Linkedin, Mail, ArrowUp } from "lucide-react";
+import { Button } from "../ui/button";
 import { Instagram, Linkedin, Github, Mail, ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
 
@@ -33,18 +35,41 @@ const CONTACTS = [
   },
 ];
 
+const NAV_LINKS = [
+  { to: "/", label: "Home" },
+  { to: "/about", label: "About" },
+  { to: "/events", label: "Events" },
+  { to: "/gallery", label: "Gallery" },
+  { to: "/team", label: "Team" },
+  { to: "/agenda", label: "Agenda" },
+];
+
 export function SiteFooter() {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <footer className="relative mt-24 border-t border-border">
-      <div className="mx-auto max-w-6xl px-5 py-12">
-        <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
+    <footer className="relative mt-24 border-t border-border bg-surface/40">
+      <div className="mx-auto max-w-6xl px-5 py-14">
+        <div className="grid gap-10 lg:grid-cols-[1.5fr_1fr]">
+          {/* Brand & Description */}
           <div>
-            <p className="font-display text-2xl font-semibold">
+            <div className="flex items-center gap-3">
+              <img
+                src="/aarna-transparent.png"
+                alt="AARNA Logo"
+                className="h-10 w-10 object-contain"
+              />
+              <span className="font-display text-xl font-bold">AARNA</span>
+            </div>
+            <p className="mt-3 font-display text-xl font-semibold">
               <span className="text-flow">Turning Passions into Profits.</span>
             </p>
-            <p className="mt-2 max-w-md text-sm text-muted-foreground">
-              AARNA — the student club at Vignana Bharathi Institute of Technology building
-              earners, not just learners.
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
+              AARNA is the student creative commerce club at Vignana Bharathi Institute of
+              Technology (VBIT) enabling ambitious students to turn their skills into income,
+              portfolios, and real commercial opportunities.
             </p>
           </div>
           <div className="flex flex-wrap gap-5 text-sm text-muted-foreground">

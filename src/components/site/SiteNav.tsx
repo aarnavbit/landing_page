@@ -1,8 +1,14 @@
+import { Link, useLocation } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { Menu, X, Moon, Sun, Sparkles } from "lucide-react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, useRef } from "react";
 import { Menu, X, Moon, Sun } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
 import { Button } from "../ui/button";
+import { JoinModal } from "./JoinModal";
+
+const mark = { url: "/aarna-transparent.png" };
 
 const LINKS = [
   { to: "/", label: "Home" },

@@ -1,9 +1,10 @@
+import { User, Users } from "lucide-react";
+
 const skillQuestPhoto = { url: "/gallery/photo-08.webp" };
+
 /**
- * PhotoSlot — intentionally empty image frame.
- *
- * TO ADD A PHOTO: replace the inner placeholder block with
- *   <img src={yourImport} alt={label} className="h-full w-full object-cover" />
+ * PhotoSlot — Image frame component.
+ * Displays photo asset when available, or styled team badge avatar as placeholder.
  */
 export function PhotoSlot({
   label,
