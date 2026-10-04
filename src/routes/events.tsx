@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { CalendarDays, MapPin, X, Sparkles, CheckCircle2, ArrowRight } from "lucide-react";
+import { CalendarDays, MapPin, X, ArrowUpRight } from "lucide-react";
 
 import { Reveal, RevealWords } from "../components/site/Reveal";
 import { PhotoSlot } from "../components/site/PhotoSlot";
@@ -78,14 +79,12 @@ export function Events() {
                 onClick={() => setActive(e)}
                 whileHover={{ y: -6 }}
                 transition={{ type: "spring", stiffness: 260, damping: 24 }}
-                className="grain-noise group block w-full overflow-hidden rounded-3xl surface-panel p-7 text-left border border-border cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                aria-haspopup="dialog"
+                className="group grain-noise block w-full overflow-hidden rounded-3xl surface-panel p-7 text-left"
               >
                 <motion.div layoutId={`media-${e.id}`}>
-                  <PhotoSlot label={`${e.title} poster`} ratio="aspect-[16/9]" />
+                  <PhotoSlot label={`${e.title} poster`} ratio="aspect-[16/9]" imageUrl={e.imageUrl} />
                 </motion.div>
-
-                <div className="mt-6 flex items-center justify-between">
+                <div className="mt-6 flex items-center justify-between transition-transform duration-300 group-hover:translate-x-1">
                   <motion.span
                     layoutId={`tag-${e.id}`}
                     className="text-xs uppercase tracking-widest text-primary font-semibold"
@@ -105,14 +104,12 @@ export function Events() {
 
                 <motion.h2
                   layoutId={`title-${e.id}`}
-                  className="mt-3 font-display text-3xl font-bold group-hover:text-primary transition-colors"
+                  className="mt-3 font-display text-3xl font-semibold transition-transform duration-300 group-hover:translate-x-1"
                 >
                   {e.title}
                 </motion.h2>
-
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{e.summary}</p>
-
-                <div className="mt-6 flex flex-wrap gap-4 text-xs text-muted-foreground border-t border-border/60 pt-4">
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground transition-transform duration-300 group-hover:translate-x-1">{e.summary}</p>
+                <div className="mt-5 flex flex-wrap gap-4 text-xs text-muted-foreground transition-transform duration-300 group-hover:translate-x-1">
                   <span className="inline-flex items-center gap-1.5">
                     <CalendarDays className="h-3.5 w-3.5 text-primary" />
                     {e.date}
@@ -122,11 +119,10 @@ export function Events() {
                     {e.venue}
                   </span>
                 </div>
-
-                <div className="mt-5 flex items-center justify-between text-xs font-semibold text-primary">
-                  <span>View Details & Outcomes</span>
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </div>
+                <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-transform duration-300 group-hover:translate-x-1">
+                  View full event
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
               </motion.button>
             </Reveal>
           ))}
@@ -167,7 +163,7 @@ export function Events() {
               </Button>
 
               <motion.div layoutId={`media-${active.id}`}>
-                <PhotoSlot label={`${active.title} poster`} ratio="aspect-[16/9]" />
+                <PhotoSlot label={`${active.title} poster`} ratio="aspect-[16/9]" imageUrl={active.imageUrl} />
               </motion.div>
 
               <div className="mt-6 flex items-center justify-between">

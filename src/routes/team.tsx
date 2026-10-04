@@ -1,10 +1,14 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { Sparkles, Users, Award, ShieldCheck } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 import { Reveal, RevealWords } from "../components/site/Reveal";
 import { PhotoSlot } from "../components/site/PhotoSlot";
+import { TeamPortfolioModal } from "../components/site/TeamPortfolioModal";
 import { FACULTY, LEADERSHIP, TEAMS } from "../data/aarna";
+import { PORTFOLIO_TEAMS, type PortfolioTeam } from "../data/portfolioTeams";
 
 export const Route = createFileRoute("/team")({
   head: () => ({
@@ -27,7 +31,9 @@ export const Route = createFileRoute("/team")({
   component: Team,
 });
 
-export function Team() {
+function Team() {
+  const [selectedTeam, setSelectedTeam] = useState<PortfolioTeam | null>(null);
+
   return (
     <div className="relative overflow-x-hidden">
       {/* PAGE HERO */}
@@ -61,27 +67,29 @@ export function Team() {
             </span>
           </div>
           <div className="mx-auto max-w-sm">
-            <PersonCard role={FACULTY.role} name={FACULTY.name} detail={FACULTY.detail} lead />
+            <PersonCard
+              role={FACULTY.role}
+              name={FACULTY.name}
+              detail={FACULTY.detail}
+              imageUrl={FACULTY.imageUrl}
+              lead
+            />
           </div>
         </Reveal>
 
         <Connector />
 
-        {/* LEVEL 2: CORE LEADERSHIP */}
-        <Reveal>
-          <div className="text-center mb-8">
-            <span className="text-xs uppercase tracking-widest text-primary font-semibold">
-              Core Executive Leadership
-            </span>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-3">
-            {LEADERSHIP.map((p, i) => (
-              <Reveal key={p.role} delay={i * 0.1}>
-                <PersonCard role={p.role} name={p.name} />
-              </Reveal>
-            ))}
-          </div>
-        </Reveal>
+        <div className="grid gap-5 sm:grid-cols-3">
+          {LEADERSHIP.map((p, i) => (
+            <Reveal key={p.role} delay={i * 0.1}>
+              <PersonCard
+                role={p.role}
+                name={p.name}
+                imageUrl={p.imageUrl}
+              />
+            </Reveal>
+          ))}
+        </div>
 
         <Connector />
 
@@ -101,27 +109,69 @@ export function Team() {
           </div>
         </Reveal>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {TEAMS.map((t, i) => (
-            <Reveal key={t.name} delay={i * 0.06}>
-              <motion.div
-                whileHover={{ y: -6 }}
-                transition={{ type: "spring", stiffness: 260, damping: 22 }}
-                className="grain-noise h-full rounded-2xl surface-panel p-5 border border-border flex flex-col justify-between"
-              >
-                <div>
-                  <PhotoSlot label={t.name} ratio="aspect-[4/3]" />
-                  <div className="mt-4 flex items-center justify-between">
-                    <h3 className="font-display text-lg font-bold">{t.name}</h3>
-                    <span className="h-2 w-2 rounded-full bg-primary" />
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {TEAMS.map((t, i) => {
+            const teamData = PORTFOLIO_TEAMS[t.name];
+            return (
+              <Reveal key={t.name} delay={i * 0.06}>
+                <motion.div
+                  whileHover={{ y: -6 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 22 }}
+                  onClick={() => teamData && setSelectedTeam(teamData)}
+                  className="group grain-noise h-full rounded-2xl surface-panel p-4 cursor-pointer transition-all duration-300 hover:border-primary/60 hover:shadow-[0_0_30px_rgba(245,180,0,0.18)]"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      teamData && setSelectedTeam(teamData);
+                    }
+                  }}
+                  aria-label={`View ${t.name} team members`}
+                >
+                  <div className="relative overflow-hidden rounded-xl">
+                    <div className="transition-all duration-700 group-hover:scale-105 group-hover:opacity-80">
+                      <PhotoSlot
+                        label={t.name}
+                        ratio="aspect-[4/5]"
+                        imageUrl={teamData?.cardImage}
+                      />
+                    </div>
+                    <div className="absolute inset-0 pointer-events-none flex flex-col justify-between p-3.5 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t from-black/85 via-black/20 to-transparent">
+                      <span className="self-end rounded-full bg-primary/20 backdrop-blur-md border border-primary/40 px-2 py-0.5 text-[10px] font-semibold text-primary uppercase">
+                        View Team →
+                      </span>
+                      {teamData && (
+                        <div>
+                          <span className="block font-display font-semibold text-white text-sm">
+                            {teamData.lead.name}
+                          </span>
+                          <span className="block text-xs text-primary/90">
+                            {teamData.lead.role}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{t.blurb}</p>
-                </div>
-              </motion.div>
-            </Reveal>
-          ))}
+                  <h3 className="mt-4 font-display text-lg font-semibold transition-transform duration-300 group-hover:translate-y-[-2px] group-hover:text-primary flex items-center justify-between">
+                    <span>{t.name}</span>
+                    <ArrowUpRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
+                  </h3>
+                  <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground transition-transform duration-300 group-hover:translate-y-[-2px]">
+                    {t.blurb}
+                  </p>
+                </motion.div>
+              </Reveal>
+            );
+          })}
         </div>
       </section>
+
+      {/* Team Portfolio Modal */}
+      <TeamPortfolioModal
+        team={selectedTeam}
+        onClose={() => setSelectedTeam(null)}
+      />
     </div>
   );
 }
@@ -140,30 +190,41 @@ function PersonCard({
   role,
   name,
   detail,
+  imageUrl,
   lead = false,
 }: {
   role: string;
   name: string;
   detail?: string;
+  imageUrl?: string;
   lead?: boolean;
 }) {
   return (
     <motion.div
       whileHover={{ y: -6 }}
       transition={{ type: "spring", stiffness: 260, damping: 22 }}
-      className={`grain-noise h-full rounded-3xl surface-panel p-6 text-center border border-border ${
-        lead ? "ring-2 ring-primary/60 shadow-lg" : ""
+      className={`group grain-noise h-full rounded-2xl surface-panel p-5 text-center ${
+        lead ? "glow-ring" : ""
       }`}
     >
-      <PhotoSlot label={role} ratio={lead ? "aspect-[4/3]" : "aspect-[4/5]"} />
-
-      <span className="mt-5 inline-block rounded-full bg-primary px-3.5 py-1 text-[10px] font-bold uppercase tracking-widest text-primary-foreground shadow-xs">
+      <div className="relative overflow-hidden rounded-xl">
+        <div className="transition-all duration-700 group-hover:scale-105 group-hover:opacity-60">
+          <PhotoSlot
+            label={role}
+            ratio={lead ? "aspect-[4/4]" : "aspect-[4/5]"}
+            imageUrl={imageUrl}
+          />
+        </div>
+        <div className="absolute inset-0 pointer-events-none flex flex-col justify-end p-4 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+          <span className="text-center font-display font-semibold text-primary/90 text-sm">{name}</span>
+          <span className="text-center text-xs text-foreground">{role}</span>
+        </div>
+      </div>
+      <span className="mt-4 inline-block rounded-full bg-[image:var(--gradient-flow)] px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-primary-foreground">
         {role}
       </span>
-
-      <h3 className="mt-3 font-display text-xl font-bold">{name}</h3>
-
-      {detail && <p className="mt-1 text-xs text-muted-foreground font-medium">{detail}</p>}
+      <h3 className="mt-3 font-display text-xl font-semibold transition-transform duration-300 group-hover:translate-y-[-2px]">{name}</h3>
+      {detail && <p className="mt-1 text-xs text-muted-foreground transition-transform duration-300 group-hover:translate-y-[-2px]">{detail}</p>}
     </motion.div>
   );
 }

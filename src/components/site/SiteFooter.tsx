@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Linkedin, Mail, ArrowUp } from "lucide-react";
 import { Button } from "../ui/button";
+import { Instagram, Linkedin, Github, Mail, ArrowUpRight } from "lucide-react";
+import { motion } from "motion/react";
 
 const CONTACTS = [
   {
@@ -8,18 +10,28 @@ const CONTACTS = [
     label: "Instagram",
     handle: "@aarna.vbit",
     icon: Instagram,
+    color: "hover:border-pink-500/60 hover:shadow-pink-500/10",
   },
   {
     href: "https://www.linkedin.com/in/aarna-vbit-b025b4432/",
     label: "LinkedIn",
     handle: "aarna-vbit",
     icon: Linkedin,
+    color: "hover:border-blue-500/60 hover:shadow-blue-500/10",
+  },
+  {
+    href: "https://github.com/aarnavbit",
+    label: "GitHub",
+    handle: "aarnavbit",
+    icon: Github,
+    color: "hover:border-purple-500/60 hover:shadow-purple-500/10",
   },
   {
     href: "mailto:aarnavbit@gmail.com",
     label: "Email",
     handle: "aarnavbit@gmail.com",
     icon: Mail,
+    color: "hover:border-primary/60 hover:shadow-primary/10",
   },
 ];
 
@@ -59,58 +71,47 @@ export function SiteFooter() {
               Technology (VBIT) enabling ambitious students to turn their skills into income,
               portfolios, and real commercial opportunities.
             </p>
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              {CONTACTS.map((c) => (
-                <a
-                  key={c.label}
-                  href={c.href}
-                  target={c.href.startsWith("mailto:") ? undefined : "_blank"}
-                  rel="noreferrer"
-                  aria-label={`${c.label} — ${c.handle}`}
-                  title={`${c.label} — ${c.handle}`}
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-xs font-medium text-muted-foreground transition-all hover:border-primary/60 hover:text-foreground hover:bg-surface-2"
-                >
-                  <c.icon className="h-4 w-4 text-primary" />
-                  <span>{c.handle}</span>
-                </a>
-              ))}
-            </div>
           </div>
+          <div className="flex flex-wrap gap-5 text-sm text-muted-foreground">
+            <Link to="/about" className="hover:text-foreground transition-colors">About</Link>
+            <Link to="/events" className="hover:text-foreground transition-colors">Events</Link>
+            <Link to="/gallery" className="hover:text-foreground transition-colors">Gallery</Link>
+            <Link to="/team" className="hover:text-foreground transition-colors">Team</Link>
+            <Link to="/agenda" className="hover:text-foreground transition-colors">Agenda</Link>
+          </div>
+        </div>
 
-          {/* Navigation & Back to Top */}
-          <div className="flex flex-col justify-between gap-6 sm:flex-row lg:flex-col lg:items-end">
-            <div>
-              <h3 className="text-xs uppercase tracking-widest text-primary font-semibold">
-                Navigation
-              </h3>
-              <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2.5 text-sm text-muted-foreground lg:justify-end">
-                {NAV_LINKS.map((link) => (
-                  <li key={link.to}>
-                    <Link to={link.to} className="transition-colors hover:text-foreground">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={scrollToTop}
-              aria-label="Back to top"
-              className="inline-flex items-center gap-2 rounded-full border-border bg-surface text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-surface-2 self-start sm:self-auto"
+        {/* Social Cards */}
+        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {CONTACTS.map((c, i) => (
+            <motion.a
+              key={c.label}
+              href={c.href}
+              target={c.href.startsWith("mailto:") ? undefined : "_blank"}
+              rel="noreferrer"
+              aria-label={`${c.label} — ${c.handle}`}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              whileHover={{ y: -4, scale: 1.02 }}
+              className={`group relative flex flex-col items-center gap-3 rounded-2xl border border-border bg-surface/50 px-5 py-6 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl ${c.color}`}
             >
-              <span>Back to top</span>
-              <ArrowUp className="h-3.5 w-3.5" />
-            </Button>
-          </div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-surface-2 transition-colors group-hover:bg-primary/10">
+                <c.icon className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-primary" />
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-semibold text-foreground">{c.label}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">{c.handle}</p>
+              </div>
+              <ArrowUpRight className="absolute right-3 top-3 h-3.5 w-3.5 text-muted-foreground/40 transition-all group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </motion.a>
+          ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-8 text-center text-xs text-muted-foreground sm:flex-row sm:text-left">
-          <p>© {new Date().getFullYear()} AARNA Club, VBIT. All rights reserved.</p>
-          <p>Vignana Bharathi Institute of Technology · Student-led Organization</p>
-        </div>
+        <p className="mt-10 text-center text-xs text-muted-foreground">
+          © {new Date().getFullYear()} AARNA Club, VBIT. All rights reserved.
+        </p>
       </div>
     </footer>
   );

@@ -8,6 +8,7 @@ export type AarnaEvent = {
   summary: string;
   details: string[];
   outcomes: string[];
+  imageUrl?: string;
 };
 
 export const EVENTS: AarnaEvent[] = [
@@ -44,6 +45,7 @@ export const EVENTS: AarnaEvent[] = [
       "The full format is still being finalised, so treat everything here as loading.",
     ],
     outcomes: ["Announcement dropping soon."],
+    imageUrl: "/icons/ishanya26.svg",
   },
 ];
 
@@ -69,15 +71,33 @@ export const TEAMS: { name: TeamName; blurb: string }[] = [
 ];
 
 export const LEADERSHIP = [
-  { role: "Chair", name: "Prashant" },
-  { role: "Vice Chair", name: "Manish Chari" },
-  { role: "Secretary", name: "Prathikya" },
+  {
+    role: "Chair Person",
+    name: "G Prashanth",
+    rollNo: "24p61a3218",
+    dept: "CSB",
+    imageUrl: "/gallery/present_ternure/Prashanth-chair.jpeg",
+  },
+  {
+    role: "Vice Chair Person",
+    name: "V Manish Chary",
+    rollNo: "24p61a3260",
+    dept: "CSB",
+  },
+  {
+    role: "Secretary",
+    name: "G Karthikeya",
+    rollNo: "24p61a3217",
+    dept: "CSB",
+    imageUrl: "/gallery/present_ternure/Karthikeya-secretary.jpeg",
+  },
 ];
 
 export const FACULTY = {
   role: "Faculty Coordinator",
   name: "K. Keerthana",
   detail: "Assistant Professor | CSBS",
+  imageUrl: "/gallery/present_ternure/faculty_coordinator.jpg",
 };
 
 export const OBJECTIVES = [

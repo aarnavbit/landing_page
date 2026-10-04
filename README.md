@@ -1,29 +1,54 @@
-# Welcome to your Lovable project
+# ARNA
 
-This project was built with [Lovable](https://lovable.dev).
+## Project Overview
 
-## Build with Lovable
+AARNA is the student club at VBIT that turns student skills into income, portfolios and real opportunities. This website serves as the premium creative-tech and student innovation platform for ARNA, introducing the brand, tools, events, gallery, and team members.
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+## Tech Stack
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- React
+- TypeScript
+- TanStack Start
+- TanStack Router
+- Vite
+- Tailwind CSS
+- Motion (framer-motion)
+- GSAP
+- Lucide React
+
+## Project Structure
+
+- `public/`: Static assets including ARNA brand files, icons, and gallery images.
+- `src/components/`: Reusable React components including the site navigation, footer, hero, preloader, and premium interactive elements.
+- `src/data/`: Centralized content files for events, team, and agenda.
+- `src/routes/`: TanStack Router file-based routing architecture.
+- `src/styles.css`: Global styles, layout utilities, and animation CSS.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+```bash
+# Install dependencies
+npm install
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+# Run the development server
 npm run dev
+
+# Build the project for production
+npm run build
+
+# Preview the production build
+npm run preview
+
+# Lint the codebase
+npm run lint
+
+# Format the code
+npm run format
 ```
 
-## Built with
+## Adding Content
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+- **Events:** Edit `src/data/aarna.ts` (or equivalent data file) to add new events.
+- **Gallery Images:** Place new images in `public/` (e.g., `public/gallery/`) and add references in the data files or gallery components.
+- **Brand Assets:** The official brand assets are `public/icons/arna-logo-white.svg` and `public/icons/arna-mark.svg`. Update these files if the brand changes.
+hello 

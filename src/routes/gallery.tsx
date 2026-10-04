@@ -2,12 +2,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { X, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { X, Camera } from "lucide-react";
 import { Button } from "../components/ui/button";
 
-const PHOTOS = Array.from({ length: 26 }, (_, i) => {
+const ALL_PHOTOS = Array.from({ length: 26 }, (_, i) => {
   const n = String(i + 1).padStart(2, "0");
   return { asset_id: `photo-${n}`, url: `/gallery/photo-${n}.webp` };
 });
+
+// Show only 12 curated photos
+const PHOTOS = ALL_PHOTOS.slice(0, 12);
 
 const COLUMNS = [
   PHOTOS.filter((_, index) => index % 3 === 0),
@@ -46,14 +50,6 @@ export function Gallery() {
 
   const columnOffsets = [firstY, secondY, thirdY] as const;
 
-  const handleNext = useCallback(() => {
-    setSelected((prev) => (prev !== null ? (prev + 1) % PHOTOS.length : null));
-  }, []);
-
-  const handlePrev = useCallback(() => {
-    setSelected((prev) => (prev !== null ? (prev - 1 + PHOTOS.length) % PHOTOS.length : null));
-  }, []);
-
   useEffect(() => {
     if (selected === null) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -64,150 +60,68 @@ export function Gallery() {
 
     window.addEventListener("keydown", onKeyDown);
     document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = "";
-    };
-  }, [selected, handleNext, handlePrev]);
+    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
+  }, [selected]);
 
-  return (
-    <div className="relative overflow-x-hidden">
-      {/* HERO SECTION */}
-      <section className="border-b border-border bg-surface/30">
-        <div className="mx-auto max-w-6xl px-5 py-20 sm:py-24">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
-            <Sparkles className="h-3.5 w-3.5" />
-            Skill Quest · VBIT
-          </div>
-          <h1 className="mt-4 font-display text-4xl font-bold leading-tight md:text-6xl tracking-tight">
-            The Gallery.
-          </h1>
-          <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground md:text-base">
-            Skill Quest through the eyes of the students, mentors, and speakers who made it happen
-            at VBIT.
-          </p>
+  return <div>
+    <section className="border-b border-border bg-surface/50">
+      <div className="mx-auto max-w-6xl px-5 pb-12 pt-16 md:pb-16 md:pt-24">
+        <p className="text-xs font-semibold uppercase tracking-wide text-primary">AARNA / In frames</p>
+        <h1 className="mt-4 font-display text-4xl font-semibold md:text-6xl">The gallery.</h1>
+        <div className="mt-5 flex flex-wrap items-end justify-between gap-4">
+          <p className="max-w-lg text-sm leading-relaxed text-muted-foreground md:text-base">Skill Quest, through the eyes of the people who made it happen.</p>
         </div>
-      </section>
+      </div>
+    </section>
 
-      {/* MASONRY GRID */}
-      <section className="mx-auto max-w-6xl px-3 py-10 sm:px-5 md:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-3 items-start gap-2.5 sm:gap-4 md:gap-5">
-          {COLUMNS.map((column, columnIndex) => (
-            <motion.div
-              key={columnIndex}
-              style={{ y: columnOffsets[columnIndex] ?? firstY }}
-              className={`grid gap-2.5 sm:gap-4 md:gap-5 ${
-                columnIndex === 2 ? "hidden md:grid" : ""
-              }`}
+    <section className="mx-auto max-w-6xl overflow-hidden px-2 py-10 sm:px-5 md:py-16">
+      <div className="grid grid-cols-3 items-start gap-1.5 sm:gap-3 md:gap-5">
+        {COLUMNS.map((column, columnIndex) => <motion.div key={columnIndex} style={{ y: columnOffsets[columnIndex] ?? firstY }} className="grid gap-1.5 sm:gap-3 md:gap-5">
+          {column.map((photo, rowIndex) => {
+            const photoIndex = PHOTOS.findIndex(candidate => candidate.asset_id === photo.asset_id);
+            return <motion.div
+              key={photo.asset_id}
+              initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.12 }}
+              transition={{ duration: 0.55, delay: Math.min(rowIndex * 0.035, 0.18) }}
             >
-              {column.map((photo, rowIndex) => {
-                const photoIndex = PHOTOS.findIndex(
-                  (candidate) => candidate.asset_id === photo.asset_id,
-                );
-                return (
-                  <motion.div
-                    key={photo.asset_id}
-                    initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.1 }}
-                    transition={{ duration: 0.5, delay: Math.min(rowIndex * 0.04, 0.2) }}
-                  >
-                    <button
-                      onClick={() => setSelected(photoIndex)}
-                      aria-label={`Open Skill Quest photo ${photoIndex + 1}`}
-                      className={`group relative h-auto w-full overflow-hidden rounded-xl border border-border bg-surface shadow-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                        photoIndex % 5 === 0 ? "aspect-[3/4]" : "aspect-[4/5]"
-                      }`}
-                    >
-                      <img
-                        src={photo.url}
-                        alt={`Skill Quest event photograph ${photoIndex + 1}`}
-                        loading={photoIndex < 6 ? "eager" : "lazy"}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-end p-4">
-                        <span className="text-xs font-semibold text-white">
-                          Skill Quest #{photoIndex + 1}
-                        </span>
-                      </div>
-                    </button>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          ))}
+              <Button variant="ghost" onClick={() => setSelected(photoIndex)} aria-label={`Open Skill Quest photo ${photoIndex + 1}`} className={`group relative h-auto w-full overflow-hidden rounded-sm p-0 shadow-none ${photoIndex % 7 === 0 || photoIndex % 7 === 4 ? "aspect-[3/4]" : "aspect-[4/5]"}`}>
+                <img src={photo.url} alt={`Skill Quest event photograph ${photoIndex + 1}`} loading={photoIndex < 6 ? "eager" : "lazy"} className="h-full w-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:opacity-60" />
+                <div className="absolute inset-0 pointer-events-none flex flex-col justify-end p-4 md:p-6 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+                  <span className="text-left font-display font-semibold text-primary/90 text-sm md:text-base">Skill Quest</span>
+                  <span className="text-left text-xs md:text-sm text-foreground">In frames</span>
+                </div>
+              </Button>
+            </motion.div>;
+          })}
+        </motion.div>)}
+      </div>
+    </section>
+
+    {/* Upcoming event notice */}
+    <section className="mx-auto max-w-6xl px-5 pb-16">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-border bg-surface/30 px-8 py-12 text-center"
+      >
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+          <Camera className="h-6 w-6 text-primary" />
         </div>
-      </section>
+        <h3 className="font-display text-lg font-semibold">More moments coming soon</h3>
+        <p className="max-w-md text-sm text-muted-foreground">
+          The upcoming event images are still being updated. Stay tuned for more memories from our latest events!
+        </p>
+      </motion.div>
+    </section>
 
-      {/* LIGHTBOX MODAL */}
-      {selected !== null && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-background/95 backdrop-blur-md p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`Skill Quest photo ${selected + 1} of ${PHOTOS.length}`}
-          onClick={() => setSelected(null)}
-        >
-          {/* Close button */}
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setSelected(null)}
-            aria-label="Close photo lightbox"
-            className="absolute right-4 top-4 z-20 rounded-full border-border bg-surface text-foreground hover:bg-surface-2"
-          >
-            <X className="h-5 w-5" />
-          </Button>
-
-          {/* Previous Button */}
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={(e) => {
-              e.stopPropagation();
-              handlePrev();
-            }}
-            aria-label="Previous photograph"
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 rounded-full border-border bg-surface text-foreground hover:bg-surface-2 h-11 w-11"
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </Button>
-
-          {/* Next Button */}
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleNext();
-            }}
-            aria-label="Next photograph"
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 rounded-full border-border bg-surface text-foreground hover:bg-surface-2 h-11 w-11"
-          >
-            <ChevronRight className="h-6 w-6" />
-          </Button>
-
-          {/* Image Container */}
-          <div
-            className="relative max-h-[82vh] max-w-4xl overflow-hidden rounded-2xl border border-border shadow-2xl bg-black flex items-center justify-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img
-              src={PHOTOS[selected]?.url}
-              alt={`Skill Quest event photograph ${selected + 1}`}
-              className="max-h-[80vh] w-auto max-w-full object-contain"
-            />
-          </div>
-
-          {/* Footer Counter & Details */}
-          <div
-            className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 rounded-full border border-border bg-surface/80 px-4 py-1.5 backdrop-blur-md text-xs font-semibold text-foreground shadow-md"
-            onClick={(e) => e.stopPropagation()}
-          >
-            Photo {selected + 1} of {PHOTOS.length}
-          </div>
-        </div>
-      )}
-    </div>
-  );
+    {selected !== null && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-background/95 p-3 backdrop-blur-md" role="dialog" aria-modal="true" aria-label={`Skill Quest photo ${selected + 1}`} onClick={() => setSelected(null)}>
+      <Button variant="outline" size="icon" onClick={() => setSelected(null)} aria-label="Close photo" className="absolute right-4 top-4 z-10"><X /></Button>
+       <img src={PHOTOS[selected]?.url} alt={`Skill Quest event photograph ${selected + 1}`} className="max-h-[85vh] max-w-full object-contain" onClick={e => e.stopPropagation()} />
+      <span className="absolute bottom-4 text-xs text-muted-foreground">{selected + 1} / {PHOTOS.length}</span>
+    </div>}
+  </div>;
 }
