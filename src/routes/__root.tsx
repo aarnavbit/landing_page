@@ -7,12 +7,15 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
+import Lenis from "lenis";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteNav } from "../components/site/SiteNav";
 import { SiteFooter } from "../components/site/SiteFooter";
+import { Preloader } from "../components/site/Preloader";
+import { PageTransition } from "../components/site/PageTransition";
+import { useRouterState } from "@tanstack/react-router";
 
 function NotFoundComponent() {
   return (
@@ -39,9 +42,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -111,8 +111,15 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en" className="dark">
       <head>
         <HeadContent />
+        <link rel="preload" href="/icons/arna-logo-white.svg" as="image" type="image/svg+xml" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `if(sessionStorage.getItem('aarna-preloader-seen')==='1' && !window.location.search.includes('debug-preloader=true')) document.documentElement.classList.add('skip-preloader');`,
+          }}
+        />
       </head>
-      <body>
+      <body style={{ backgroundColor: "#050505" }}>
+
         {children}
         <Scripts />
       </body>
@@ -122,13 +129,44 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const routerState = useRouterState();
+  const lenisRef = useRef<Lenis | null>(null);
+
+  // Initialize Lenis smooth scrolling
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+    lenisRef.current = lenis;
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+      lenisRef.current = null;
+    };
+  }, []);
+
+  // Scroll to top on route change
+  useEffect(() => {
+    lenisRef.current?.scrollTo(0, { immediate: true });
+  }, [routerState.location.pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>
+      <Preloader />
       <SiteNav />
       <main className="min-h-screen pt-16">
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
+        <PageTransition keyId={routerState.location.pathname}>
+          <Outlet />
+        </PageTransition>
       </main>
       <SiteFooter />
     </QueryClientProvider>

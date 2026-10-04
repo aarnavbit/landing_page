@@ -71,11 +71,18 @@ function Team() {
               <motion.div
                 whileHover={{ y: -6 }}
                 transition={{ type: "spring", stiffness: 260, damping: 22 }}
-                className="grain-noise h-full rounded-2xl surface-panel p-4"
+                className="group grain-noise h-full rounded-2xl surface-panel p-4"
               >
-                <PhotoSlot label={t.name} ratio="aspect-[4/5]" />
-                <h3 className="mt-4 font-display text-lg font-semibold">{t.name}</h3>
-                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{t.blurb}</p>
+                <div className="relative overflow-hidden rounded-xl">
+                  <div className="transition-all duration-700 group-hover:scale-105 group-hover:opacity-60">
+                    <PhotoSlot label={t.name} ratio="aspect-[4/5]" />
+                  </div>
+                  <div className="absolute inset-0 pointer-events-none flex flex-col justify-end p-4 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+                    <span className="text-center font-display font-semibold text-primary/90 text-sm">{t.name}</span>
+                  </div>
+                </div>
+                <h3 className="mt-4 font-display text-lg font-semibold transition-transform duration-300 group-hover:translate-y-[-2px]">{t.name}</h3>
+                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground transition-transform duration-300 group-hover:translate-y-[-2px]">{t.blurb}</p>
               </motion.div>
             </Reveal>
           ))}
@@ -112,16 +119,24 @@ function PersonCard({
     <motion.div
       whileHover={{ y: -6 }}
       transition={{ type: "spring", stiffness: 260, damping: 22 }}
-      className={`grain-noise h-full rounded-2xl surface-panel p-5 text-center ${
+      className={`group grain-noise h-full rounded-2xl surface-panel p-5 text-center ${
         lead ? "glow-ring" : ""
       }`}
     >
-      <PhotoSlot label={role} ratio={lead ? "aspect-[4/3]" : "aspect-[4/5]"} />
+      <div className="relative overflow-hidden rounded-xl">
+        <div className="transition-all duration-700 group-hover:scale-105 group-hover:opacity-60">
+          <PhotoSlot label={role} ratio={lead ? "aspect-[4/3]" : "aspect-[4/5]"} />
+        </div>
+        <div className="absolute inset-0 pointer-events-none flex flex-col justify-end p-4 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+          <span className="text-center font-display font-semibold text-primary/90 text-sm">{name}</span>
+          <span className="text-center text-xs text-foreground">{role}</span>
+        </div>
+      </div>
       <span className="mt-4 inline-block rounded-full bg-[image:var(--gradient-flow)] px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-primary-foreground">
         {role}
       </span>
-      <h3 className="mt-3 font-display text-xl font-semibold">{name}</h3>
-      {detail && <p className="mt-1 text-xs text-muted-foreground">{detail}</p>}
+      <h3 className="mt-3 font-display text-xl font-semibold transition-transform duration-300 group-hover:translate-y-[-2px]">{name}</h3>
+      {detail && <p className="mt-1 text-xs text-muted-foreground transition-transform duration-300 group-hover:translate-y-[-2px]">{detail}</p>}
     </motion.div>
   );
 }

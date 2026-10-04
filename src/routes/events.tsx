@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { CalendarDays, MapPin, X } from "lucide-react";
+import { CalendarDays, MapPin, X, ArrowUpRight } from "lucide-react";
 
 import { Reveal, RevealWords } from "../components/site/Reveal";
 import { PhotoSlot } from "../components/site/PhotoSlot";
@@ -64,12 +64,12 @@ function Events() {
                 onClick={() => setActive(e)}
                 whileHover={{ y: -8 }}
                 transition={{ type: "spring", stiffness: 260, damping: 24 }}
-                className="grain-noise block w-full overflow-hidden rounded-3xl surface-panel p-7 text-left"
+                className="group grain-noise block w-full overflow-hidden rounded-3xl surface-panel p-7 text-left"
               >
                 <motion.div layoutId={`media-${e.id}`}>
-                  <PhotoSlot label={`${e.title} poster`} ratio="aspect-[16/9]" />
+                  <PhotoSlot label={`${e.title} poster`} ratio="aspect-[16/9]" imageUrl={e.imageUrl} />
                 </motion.div>
-                <div className="mt-6 flex items-center justify-between">
+                <div className="mt-6 flex items-center justify-between transition-transform duration-300 group-hover:translate-x-1">
                   <motion.span
                     layoutId={`tag-${e.id}`}
                     className="text-xs uppercase tracking-[0.2em] text-primary"
@@ -84,12 +84,12 @@ function Events() {
                 </div>
                 <motion.h2
                   layoutId={`title-${e.id}`}
-                  className="mt-3 font-display text-3xl font-semibold"
+                  className="mt-3 font-display text-3xl font-semibold transition-transform duration-300 group-hover:translate-x-1"
                 >
                   {e.title}
                 </motion.h2>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{e.summary}</p>
-                <div className="mt-5 flex flex-wrap gap-4 text-xs text-muted-foreground">
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground transition-transform duration-300 group-hover:translate-x-1">{e.summary}</p>
+                <div className="mt-5 flex flex-wrap gap-4 text-xs text-muted-foreground transition-transform duration-300 group-hover:translate-x-1">
                   <span className="inline-flex items-center gap-1.5">
                     <CalendarDays className="h-3.5 w-3.5 text-primary" />
                     {e.date}
@@ -99,6 +99,10 @@ function Events() {
                     {e.venue}
                   </span>
                 </div>
+                <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-transform duration-300 group-hover:translate-x-1">
+                  View full event
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
               </motion.button>
             </Reveal>
           ))}
@@ -128,7 +132,7 @@ function Events() {
               </button>
 
               <motion.div layoutId={`media-${active.id}`}>
-                <PhotoSlot label={`${active.title} poster`} ratio="aspect-[16/9]" />
+                <PhotoSlot label={`${active.title} poster`} ratio="aspect-[16/9]" imageUrl={active.imageUrl} />
               </motion.div>
 
               <motion.span

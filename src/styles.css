@@ -48,31 +48,33 @@
 
 :root {
   --radius: 0.5rem;
-  --background: #ffffff;
-  --foreground: #000000;
-  --surface: #f5f5f5;
-  --surface-2: #e8e8e8;
-  --card: #ffffff;
+  --background: #faf7f2;
+  --foreground: #1a1611;
+  --surface: #f3ede4;
+  --surface-2: #ebe4d8;
+  --card: #f7f3ec;
   --card-foreground: var(--foreground);
   --popover: var(--card);
   --popover-foreground: var(--foreground);
-  --primary: #8a6500;
+  --primary: #9a7200;
   --primary-foreground: #ffffff;
-  --secondary: #f5f5f5;
+  --secondary: #f0e9dd;
   --secondary-foreground: var(--foreground);
-  --muted: #f5f5f5;
-  --muted-foreground: #666666;
+  --muted: #f0e9dd;
+  --muted-foreground: #6b5e4f;
   --accent: #f5b400;
-  --accent-foreground: #000000;
-  --destructive: #8a6500;
+  --accent-foreground: #1a1611;
+  --destructive: #9a7200;
   --destructive-foreground: #ffffff;
-  --border: #d8d8d8;
+  --border: #ddd5c8;
   --input: var(--border);
   --ring: var(--primary);
   --brand-accent: #f5b400;
   --brand-bright: #fff1a8;
   --brand-gold: #d89500;
   --brand-dark-gold: #5c4300;
+  /* The supplied AARNA wordmark includes both black and white artwork. */
+  --brand-wordmark-background: #050505;
   --gradient-flow: linear-gradient(135deg, var(--brand-bright), var(--brand-accent) 52%, var(--brand-gold));
   --gradient-surface: linear-gradient(var(--card), var(--card));
   --shadow-glow: 0 12px 36px -20px color-mix(in srgb, var(--primary) 22%, transparent);
@@ -101,9 +103,19 @@
   --input: var(--border);
   --ring: var(--primary);
 }
+/* Smooth theme transition */
+html {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+html *,
+html *::before,
+html *::after {
+  transition: background-color 0.4s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
 @layer base {
   * { border-color: var(--color-border); }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: auto; }
   body { background-color: var(--color-background); color: var(--color-foreground); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
   h1,h2,h3,h4 { font-family: var(--font-display); letter-spacing: 0; }
 }
@@ -119,6 +131,13 @@
 @utility animate-marquee { animation: marquee-x 32s linear infinite; }
 
 .aarna-hero-visual { position: relative; min-height: 24rem; touch-action: pan-y; }
+.aarna-title-lockup {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.65rem 0.9rem;
+  background: var(--brand-wordmark-background);
+  border-radius: 0.5rem;
+}
 .aarna-hero-stage { position: absolute; inset: 0; margin: auto; aspect-ratio: 10 / 9; width: min(100%, 38rem); will-change: transform; }
 .aarna-mark-wrap { position: absolute; inset: 0; transform-origin: center; will-change: transform, opacity; }
 .aarna-mark { width: 100%; height: 100%; overflow: visible; animation: aarna-float 6s ease-in-out infinite; }
@@ -144,4 +163,211 @@
   *,*::before,*::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
   .aarna-mark-wrap { opacity: 1 !important; transform: none !important; }
   .aarna-assembly-tile { display: none; }
+  .aarna-orbit-layer,
+  .aarna-orbit-counter,
+  .aarna-core-logo,
+  .aarna-particle-glow,
+  .aarna-scroll-dot {
+    animation: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   AARNA HERO ORBITAL SYSTEM
+   ═══════════════════════════════════════════════════════════ */
+@keyframes aarna-spin-cw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes aarna-spin-ccw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes aarna-orbit-cw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes aarna-orbit-ccw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes aarna-core-pulse {
+  0%, 100% {
+    transform: scale(0.97);
+    filter: drop-shadow(0 0 25px rgba(252, 141, 49, 0.35)) drop-shadow(0 0 50px rgba(220, 6, 148, 0.2));
+  }
+  50% {
+    transform: scale(1.03);
+    filter: drop-shadow(0 0 42px rgba(252, 141, 49, 0.55)) drop-shadow(0 0 85px rgba(220, 6, 148, 0.35));
+  }
+}
+
+@keyframes aarna-particle-shimmer {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes aarna-scroll-wheel-dot {
+  0% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(6px); opacity: 0.8; }
+  100% { transform: translateY(12px); opacity: 0; }
+}
+
+.aarna-scroll-dot {
+  animation: aarna-scroll-wheel-dot 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.aarna-core-logo {
+  animation: aarna-core-pulse 5s ease-in-out infinite;
+}
+
+.aarna-particle-glow {
+  animation: aarna-particle-shimmer 2.5s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PRELOADER
+   ═══════════════════════════════════════════════════════════ */
+.aarna-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Prevent any flash of white/light behind the preloader */
+  background: #050505;
+}
+
+html.skip-preloader .aarna-preloader {
+  display: none !important;
+}
+
+.aarna-preloader__bg {
+  position: absolute;
+  inset: 0;
+  background: #050505;
+  z-index: 0;
+}
+
+.aarna-preloader__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 36rem;
+  padding: 0 2rem;
+}
+
+/* ── Micro identity text ── */
+.aarna-preloader__micro {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #ffffff;
+  user-select: none;
+}
+
+/* ── Logo container ── */
+.aarna-preloader__logo-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  overflow: hidden;
+  will-change: transform, opacity, filter;
+}
+
+.aarna-preloader__logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── Light sweep ── */
+.aarna-preloader__sweep {
+  position: absolute;
+  inset: -20% 0;
+  width: 40%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(245, 180, 0, 0.12) 40%,
+    rgba(255, 241, 168, 0.18) 50%,
+    rgba(245, 180, 0, 0.12) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ── Progress area ── */
+.aarna-preloader__progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 10rem;
+}
+
+.aarna-preloader__pct {
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.4);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.aarna-preloader__bar {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.aarna-preloader__bar-fill {
+  height: 100%;
+  background: rgba(245, 180, 0, 0.5);
+  border-radius: 1px;
+  transition: width 0.15s linear;
+}
+
+/* ── Responsive ── */
+@media (max-width: 639px) {
+  .aarna-preloader__content { max-width: 28rem; }
+  .aarna-preloader__logo-wrap { max-width: 20rem; }
+  .aarna-preloader__progress { max-width: 9rem; }
+}
+
+@media (min-width: 1024px) {
+  .aarna-preloader__logo-wrap { max-width: 24rem; }
+}
+
+/* ── Reduced motion for preloader ── */
+@media (prefers-reduced-motion: reduce) {
+  .aarna-preloader__sweep { display: none; }
+  .aarna-preloader__logo-wrap {
+    filter: none !important;
+    transform: none !important;
+  }
 }

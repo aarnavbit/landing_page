@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 
 import { AarnaHeroVisual } from "../components/site/AarnaHero";
 import { Reveal, RevealWords } from "../components/site/Reveal";
+import { TiltCard } from "../components/site/TiltCard";
 import { EVENTS, OBJECTIVES } from "../data/aarna";
 
 export const Route = createFileRoute("/")({
@@ -38,12 +39,62 @@ const MARQUEE = [
   "Branding",
 ];
 
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
+
 function Landing() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const visualRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current || !textRef.current || !visualRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "+=50%",
+          scrub: 0.8,
+        },
+      });
+
+      // 1. Hero text smoothly fades out and moves up
+      tl.to(
+        textRef.current,
+        {
+          opacity: 0,
+          y: -40,
+          duration: 0.6,
+          ease: "power2.out",
+        },
+        0
+      );
+
+      // 2. Scroll indicator fades out immediately as scroll begins
+      tl.to(
+        ".aarna-scroll-indicator",
+        {
+          opacity: 0,
+          y: 18,
+          duration: 0.25,
+          ease: "power2.out",
+        },
+        0
+      );
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <div className="relative">
-      <section className="relative isolate overflow-hidden border-b border-border bg-background">
+      <section ref={containerRef} className="relative isolate overflow-hidden border-b border-border bg-background">
         <div className="mx-auto grid min-h-[calc(100svh-4rem)] max-w-7xl items-center px-5 py-10 sm:py-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(28rem,1.1fr)] lg:gap-8">
-          <div className="relative z-10 pt-4 lg:pt-0">
+          <div ref={textRef} className="relative z-10 pt-4 lg:pt-0">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -53,9 +104,21 @@ function Landing() {
             VBIT · Student-led creative commerce
           </motion.div>
 
-          <h1 className="mt-7 max-w-4xl font-title text-6xl font-normal leading-none sm:text-7xl lg:text-8xl">
-            <RevealWords text="AARNA" />
-          </h1>
+          <motion.div
+            className="mt-7 max-w-md"
+            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="aarna-title-lockup">
+              <img
+                src="/icons/aarna-preloader.svg"
+                alt="AARNA"
+                className="h-20 w-auto sm:h-24 lg:h-28 object-contain"
+                draggable={false}
+              />
+            </div>
+          </motion.div>
           <p className="mt-3 max-w-lg font-display text-xl font-semibold text-primary md:text-2xl">Turning Passions into Profits.</p>
 
           <motion.p
@@ -89,8 +152,19 @@ function Landing() {
             </Link>
           </motion.div>
           </div>
-          <div className="relative min-h-[20rem] lg:min-h-[36rem]">
+          <div ref={visualRef} className="relative min-h-[22rem] lg:min-h-[36rem] flex items-center justify-center w-full">
             <AarnaHeroVisual />
+          </div>
+        </div>
+
+        {/* Minimal Scroll to explore indicator */}
+        <div className="aarna-scroll-indicator absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1.5 pointer-events-none">
+          <div className="flex h-7 w-4.5 items-start justify-center rounded-full border border-border/80 bg-surface/60 p-1 shadow-[0_0_12px_rgba(245,180,0,0.15)] backdrop-blur-md">
+            <div className="h-1.5 w-1 rounded-full bg-primary aarna-scroll-dot" />
+          </div>
+          <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/80 animate-pulse-glow">
+            <span>Scroll to explore</span>
+            <ChevronDown className="h-3 w-3 animate-bounce text-primary" />
           </div>
         </div>
       </section>
@@ -143,9 +217,9 @@ function Landing() {
             <Reveal key={e.id} delay={i * 0.1}>
               <Link
                 to="/events"
-                className="group block h-full overflow-hidden rounded-2xl surface-panel p-8 transition-colors hover:border-primary/60"
+                className="group block h-full overflow-hidden rounded-2xl surface-panel p-8 transition-all hover:-translate-y-2 hover:border-primary/60"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between transition-transform duration-300 group-hover:translate-x-1">
                   <span className="text-xs uppercase tracking-wide text-primary">{e.tag}</span>
                   {e.status === "upcoming" && (
                     <span className="animate-pulse-glow rounded-full border border-primary/40 px-3 py-1 text-[10px] uppercase tracking-widest text-primary">
@@ -153,9 +227,9 @@ function Landing() {
                     </span>
                   )}
                 </div>
-                <h3 className="mt-4 font-display text-3xl font-semibold">{e.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{e.summary}</p>
-                <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+                <h3 className="mt-4 font-display text-3xl font-semibold transition-transform duration-300 group-hover:translate-x-1">{e.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground transition-transform duration-300 group-hover:translate-x-1">{e.summary}</p>
+                <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-transform duration-300 group-hover:translate-x-1">
                   Open details
                   <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
@@ -168,22 +242,24 @@ function Landing() {
       {/* CTA */}
       <section className="mx-auto max-w-6xl px-5 py-24">
         <Reveal>
-          <div className="relative isolate overflow-hidden rounded-3xl surface-panel px-8 py-16 text-center">
-            <h2 className="mx-auto max-w-2xl font-display text-3xl font-semibold md:text-5xl">
-              Every talent holds the potential for <span className="text-flow">success.</span>
-            </h2>
-            <p className="mx-auto mt-4 max-w-lg text-sm text-muted-foreground">
-              Coder, writer, designer, marketer — or still figuring it out. Aarna is where you find
-              out what your skill is worth.
-            </p>
-            <Link
-              to="/agenda"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-[image:var(--gradient-flow)] px-7 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
-            >
-              Our plans this tenure
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </div>
+          <TiltCard>
+            <div className="relative isolate overflow-hidden rounded-3xl surface-panel px-8 py-16 text-center border border-border/50 bg-surface/30 backdrop-blur-md shadow-2xl">
+              <h2 className="mx-auto max-w-2xl font-display text-3xl font-semibold md:text-5xl">
+                Every talent holds the potential for <span className="text-flow">success.</span>
+              </h2>
+              <p className="mx-auto mt-4 max-w-lg text-sm text-muted-foreground">
+                Coder, writer, designer, marketer — or still figuring it out. Aarna is where you find
+                out what your skill is worth.
+              </p>
+              <Link
+                to="/agenda"
+                className="mt-8 inline-flex items-center gap-2 rounded-full bg-[image:var(--gradient-flow)] px-7 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105 shadow-[0_0_20px_rgba(245,180,0,0.3)]"
+              >
+                Our plans this tenure
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </TiltCard>
         </Reveal>
       </section>
     </div>
